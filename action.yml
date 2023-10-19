@@ -1,11 +1,34 @@
-name: "Action name"
-description: "Action description"
+name: "Wiz"
+description: "Action to run Wiz CLI and format/report results"
 author: "Freckle"
 inputs:
+  wiz-client-id:
+    description: "Wiz Service Account Client Id"
+    required: true
+  wiz-client-secret:
+    description: "Wiz Service Account Client Secret"
+    required: true
+  image:
+    description: "Image to scan"
+    required: true
+  custom-policies:
+    description: "Custom policies, comma-separated names"
+    required: false
+  fail:
+    description: "Fail if image does not satisfy policy?"
+    required: true
+    default: "true"
+  pull:
+    description: "Pull the image before scanning?"
+    required: true
+    default: "false"
   github-token:
     description: "Override GitHub token, if necessary"
     required: true
     default: "${{ github.token }}"
+outputs:
+  result:
+    description: "Outcome of scan, one of passed|failed|error"
 runs:
   using: "node20"
   main: "dist/index.js"

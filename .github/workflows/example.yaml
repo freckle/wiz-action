@@ -9,5 +9,24 @@ jobs:
   example:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./
+      - uses: actions/checkout@v4
+
+      - id: scan
+        name: Scan statsd/statsd:v0.9.0 with wiz
+        uses: ./
+        with:
+          wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
+          wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
+          image: statsd/statsd:v0.9.0 # has many, many CVEs
+          fail: false
+          pull: true
+
+      - name: Verify scan result
+        run: |
+          result=${{ steps.scan.outputs.result }}
+
+          if [[ "$result" != "failed" ]]; then
+            echo "Scan step should've reported result=failed" >&2
+            echo "Instead, it reported result=$result" >&2
+            exit 1
+          fi
