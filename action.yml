@@ -22,10 +22,6 @@ inputs:
     description: "Pull the image before scanning?"
     required: true
     default: "false"
-  github-token:
-    description: "Override GitHub token, if necessary"
-    required: true
-    default: "${{ github.token }}"
 outputs:
   result:
     description: "Outcome of scan, one of passed|failed|error"
