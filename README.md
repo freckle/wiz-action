@@ -25,7 +25,7 @@ with the Wiz CLI.
     tags: ${{ steps.meta.outputs.tags }}
     load: true # required so we can scan it
 
-- uses: freckle/wiz-action@pb/first
+- uses: freckle/wiz-action@v1
   with:
     wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
     wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
