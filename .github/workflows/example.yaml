@@ -17,8 +17,7 @@ jobs:
         with:
           wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
           wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
-          wiz-api-idp: cognito
-          wiz-api-region: us19
+          wiz-api-endpoint-url: https://api.us19.app.wiz.io/graphql
           image: statsd/statsd:v0.9.0 # has many, many CVEs
           fail: false
           pull: true
