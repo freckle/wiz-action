@@ -8,6 +8,13 @@ inputs:
   wiz-client-secret:
     description: "Wiz Service Account Client Secret"
     required: true
+  wiz-api-endpoint-url:
+    description: "Wiz API Endpoint URL, such as https://api.us19.app.wiz.io/graphql"
+    required: false
+  wiz-api-idp:
+    description: "IdP used for Wiz API, Auth0 or Cognito. Only needed if your account has not migrated to Cognito yet."
+    required: false
+    default: "cognito"
   image:
     description: "Image to scan"
     required: true
@@ -22,7 +29,12 @@ inputs:
     description: "Pull the image before scanning?"
     required: true
     default: "false"
+  testing-scan-id:
+    description: "An existing scan-id, for testing report fetching"
+    required: false
 outputs:
+  scan-id:
+    description: "Id of Scan Report"
   scan-result:
     description: "Outcome of scan, one of passed|failed|error"
 runs:

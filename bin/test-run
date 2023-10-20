@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+source ./.env
+
+env \
+  "INPUT_IMAGE=statsd/statsd:v0.10.2" \
+  "INPUT_WIZ-CLIENT-ID=$WIZ_CLIENT_ID" \
+  "INPUT_WIZ-CLIENT-SECRET=$WIZ_CLIENT_SECRET" \
+  "INPUT_WIZ-API-ENDPOINT-URL=https://api.us19.app.wiz.io/graphql" \
+  "INPUT_WIZ-API-IDP=Cognito" \
+  "INPUT_PULL=true" \
+  "INPUT_FAIL=true" \
+  "INPUT_TEST-SCAN-ID=9ec390ba-8c63-4eb6-898b-a2aacce6f54f" \
+  "RUNNER_TEMP=/tmp" \
+  node ./dist/index.js

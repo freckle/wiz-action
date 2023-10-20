@@ -54,9 +54,27 @@ with the Wiz CLI.
 
 ### Outputs
 
+- `scan-id`: the Id of the Scan Result report.
 - `scan-result`: the outcome of the scan, one of `passed`, `failed`, or `error`.
 
 See [action.yml](./action.yml) for a complete list of inputs and outputs.
+
+### Job Summaries
+
+This action can fetch the scan results back from the Wiz API and print a nicely
+formatted [Job Summary][summary-docs] for you. However, interacting with the Wiz
+API uses two additional inputs:
+
+[summary-docs]: https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/
+
+- `wiz-api-endpoint-url`: The host API, e.g.
+  `https://api.us19.app.wiz.io/graphql`.
+- `wiz-api-idp`: IdP used for the API, `auth0` or `cognito` (default). This is
+  only needed if your account hasn't migrated to Cognito yet.
+
+To find these values for yourself, visit [this page][wiz-tenant].
+
+[wiz-tenant]: https://app.wiz.io/user/tenant
 
 ## Versioning
 
