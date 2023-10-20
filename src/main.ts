@@ -74,10 +74,10 @@ async function run() {
 
     switch (ec) {
       case 0:
-        core.setOutput("result", "success");
+        core.setOutput("scan-result", "success");
         break;
       case 4:
-        core.setOutput("result", "failed");
+        core.setOutput("scan-result", "failed");
         if (fail) {
           core.setFailed(
             `Image ${image} does not satisfy ${
@@ -87,7 +87,7 @@ async function run() {
         }
         break;
       default:
-        core.setOutput("result", "error");
+        core.setOutput("scan-result", "error");
         throw new Error(`wiz scan failed, status: ${ec}`);
     }
   } catch (error) {

@@ -23,10 +23,10 @@ jobs:
 
       - name: Verify scan result
         run: |
-          result=${{ steps.scan.outputs.result }}
+          result=${{ steps.scan.outputs.scan-result }}
 
           if [[ "$result" != "failed" ]]; then
-            echo "Scan step should've reported result=failed" >&2
-            echo "Instead, it reported result=$result" >&2
+            echo "Scan step should've reported scan-result=failed" >&2
+            echo "Instead, it reported scan-result=$result" >&2
             exit 1
           fi

@@ -23,7 +23,7 @@ inputs:
     required: true
     default: "false"
 outputs:
-  result:
+  scan-result:
     description: "Outcome of scan, one of passed|failed|error"
 runs:
   using: "node20"
