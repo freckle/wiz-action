@@ -1,6 +1,69 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 6180:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getInputs = void 0;
+var core = __importStar(__nccwpck_require__(2186));
+var wiz_config_1 = __nccwpck_require__(3);
+function getInputs() {
+    var wizClientId = core.getInput("wiz-client-id", { required: true });
+    var wizClientSecret = core.getInput("wiz-client-secret", {
+        required: true,
+    });
+    var image = core.getInput("image", { required: true });
+    var wizApiEndpointUrl = getOptionalInput("wiz-api-endpoint-url");
+    var wizApiIdP = (0, wiz_config_1.parseWizIdP)(core.getInput("wiz-api-idp", { required: true }));
+    var customPolicies = getOptionalInput("custom-policies");
+    var pull = core.getBooleanInput("pull", { required: true });
+    var fail = core.getBooleanInput("fail", { required: true });
+    return {
+        wizClientId: wizClientId,
+        wizClientSecret: wizClientSecret,
+        wizApiEndpointUrl: wizApiEndpointUrl,
+        wizApiIdP: wizApiIdP,
+        image: image,
+        customPolicies: customPolicies,
+        pull: pull,
+        fail: fail,
+    };
+}
+exports.getInputs = getInputs;
+function getOptionalInput(name) {
+    var value = core.getInput(name, { required: false });
+    return value !== "" ? value : null;
+}
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -70,56 +133,41 @@ var exec = __importStar(__nccwpck_require__(1514));
 var core = __importStar(__nccwpck_require__(2186));
 var wc = __importStar(__nccwpck_require__(9627));
 var sr = __importStar(__nccwpck_require__(6889));
+var inputs_1 = __nccwpck_require__(6180);
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var clientId, clientSecret, apiEndpointUrl, apiIdP, image, policies, pull, fail_1, testScanId, credentials, config, result, wizcli, _a, scanId, scanPassed, config, result, error_1, error_2;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var _a, wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail_1, wizCredentials, wizcli, _b, scanId, scanPassed, result, error_1, error_2;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 11, , 12]);
-                    clientId = core.getInput("wiz-client-id", { required: true });
-                    clientSecret = core.getInput("wiz-client-secret", { required: true });
-                    apiEndpointUrl = core.getInput("wiz-api-endpoint-url", {
-                        required: false,
-                    });
-                    apiIdP = core.getInput("wiz-api-idp", { required: true });
-                    image = core.getInput("image", { required: true });
-                    policies = core.getInput("custom-policies", { required: false });
-                    pull = core.getBooleanInput("pull", { required: true });
-                    fail_1 = core.getBooleanInput("fail", { required: true });
-                    testScanId = core.getInput("test-scan-id", { required: false });
-                    credentials = { clientId: clientId, clientSecret: clientSecret };
-                    if (!(testScanId !== "")) return [3, 2];
-                    config = { credentials: credentials, apiConfig: { apiEndpointUrl: apiEndpointUrl, apiIdP: apiIdP } };
-                    return [4, sr.fetch(testScanId, config)];
-                case 1:
-                    result = _b.sent();
-                    sr.writeSummary(image, testScanId, result);
-                    return [2];
-                case 2:
-                    if (!pull) return [3, 4];
+                    _c.trys.push([0, 9, , 10]);
+                    _a = (0, inputs_1.getInputs)(), wizClientId = _a.wizClientId, wizClientSecret = _a.wizClientSecret, wizApiEndpointUrl = _a.wizApiEndpointUrl, wizApiIdP = _a.wizApiIdP, image = _a.image, customPolicies = _a.customPolicies, pull = _a.pull, fail_1 = _a.fail;
+                    wizCredentials = {
+                        clientId: wizClientId,
+                        clientSecret: wizClientSecret,
+                    };
+                    if (!pull) return [3, 2];
                     return [4, exec.exec("docker", ["pull", image])];
+                case 1:
+                    _c.sent();
+                    _c.label = 2;
+                case 2: return [4, wc.getWizCLI(wizCredentials)];
                 case 3:
-                    _b.sent();
-                    _b.label = 4;
-                case 4: return [4, wc.getWizCLI(credentials)];
+                    wizcli = _c.sent();
+                    return [4, wizcli.scan(image, customPolicies)];
+                case 4:
+                    _b = _c.sent(), scanId = _b.scanId, scanPassed = _b.scanPassed;
+                    if (!wizApiEndpointUrl) return [3, 8];
+                    _c.label = 5;
                 case 5:
-                    wizcli = _b.sent();
-                    return [4, wizcli.scan(image, policies)];
+                    _c.trys.push([5, 7, , 8]);
+                    return [4, sr.fetch(scanId, wizCredentials, wizApiEndpointUrl, wizApiIdP)];
                 case 6:
-                    _a = _b.sent(), scanId = _a.scanId, scanPassed = _a.scanPassed;
-                    if (!(scanId && apiEndpointUrl !== "")) return [3, 10];
-                    _b.label = 7;
-                case 7:
-                    _b.trys.push([7, 9, , 10]);
-                    config = { credentials: credentials, apiConfig: { apiEndpointUrl: apiEndpointUrl, apiIdP: apiIdP } };
-                    return [4, sr.fetch(scanId, config)];
-                case 8:
-                    result = _b.sent();
+                    result = _c.sent();
                     sr.writeSummary(image, scanId, result);
-                    return [3, 10];
-                case 9:
-                    error_1 = _b.sent();
+                    return [3, 8];
+                case 7:
+                    error_1 = _c.sent();
                     if (error_1 instanceof Error) {
                         core.warning("Error writing summary: ".concat(error_1.message));
                     }
@@ -129,8 +177,8 @@ function run() {
                     else {
                         core.warning("Error writing summary");
                     }
-                    return [3, 10];
-                case 10:
+                    return [3, 8];
+                case 8:
                     if (scanPassed) {
                         core.setOutput("scan-id", scanId);
                         core.setOutput("scan-result", "success");
@@ -139,12 +187,12 @@ function run() {
                         core.setOutput("scan-id", scanId);
                         core.setOutput("scan-result", "failed");
                         if (fail_1) {
-                            core.setFailed("Image ".concat(image, " does not satisfy ").concat(policies !== "" ? "custom policies" : "default policies"));
+                            core.setFailed("Image ".concat(image, " does not satisfy ").concat(customPolicies ? "custom policies" : "default policies"));
                         }
                     }
-                    return [3, 12];
-                case 11:
-                    error_2 = _b.sent();
+                    return [3, 10];
+                case 9:
+                    error_2 = _c.sent();
                     if (error_2 instanceof Error) {
                         core.setFailed(error_2.message);
                     }
@@ -154,8 +202,8 @@ function run() {
                     else {
                         core.setFailed("Non-Error exception");
                     }
-                    return [3, 12];
-                case 12: return [2];
+                    return [3, 10];
+                case 10: return [2];
             }
         });
     });
@@ -262,15 +310,13 @@ function scanAnalyticsCount(analytics, severity) {
             return analytics.vulnerabilities.criticalCount;
     }
 }
-function fetch(scanId, config) {
+function fetch(scanId, credentials, apiEndpointUrl, apiIdP) {
     return __awaiter(this, void 0, void 0, function () {
-        var client, credentials, apiConfig, apiEndpointUrl, apiIdP, token, body;
+        var client, token, body;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     client = new http.HttpClient();
-                    credentials = config.credentials, apiConfig = config.apiConfig;
-                    apiEndpointUrl = apiConfig.apiEndpointUrl, apiIdP = apiConfig.apiIdP;
                     return [4, getAccessToken(client, credentials, apiIdP)];
                 case 1:
                     token = _a.sent();
@@ -465,7 +511,7 @@ var WizCLI = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        args = ["docker", "scan", "--image", image, "--no-style"].concat(policies !== "" ? ["--policy", policies] : []);
+                        args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
                         scanId = null;
                         return [4, exec.exec(this.wizcli, args, {
                                 ignoreReturnCode: true,
@@ -482,6 +528,9 @@ var WizCLI = (function () {
                         ec = _a.sent();
                         if (ec !== 0 && ec !== 4) {
                             throw new Error("wiz scan errored, status: ".concat(ec));
+                        }
+                        if (!scanId) {
+                            throw new Error("Unable to parse Scan Id from report");
                         }
                         scanPassed = ec === 0;
                         return [2, {
@@ -529,6 +578,28 @@ function getWizInstallUrl() {
     }
     throw new Error("Unsupported platform or architecture: ".concat(process.platform, "/").concat(process.arch));
 }
+
+
+/***/ }),
+
+/***/ 3:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseWizIdP = void 0;
+function parseWizIdP(raw) {
+    switch (raw.toLowerCase()) {
+        case "auth0":
+            return "auth0";
+        case "cognito":
+            return "cognito";
+        default:
+            throw new Error("Invalid Wiz IdP: ".concat(raw, ". Must be Auth0 or Cognito."));
+    }
+}
+exports.parseWizIdP = parseWizIdP;
 
 
 /***/ }),
