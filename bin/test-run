@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
+yarn build
+
 # shellcheck disable=SC1091
 source ./.env
 
@@ -10,6 +14,5 @@ env \
   "INPUT_WIZ-API-IDP=Cognito" \
   "INPUT_PULL=true" \
   "INPUT_FAIL=true" \
-  "INPUT_TEST-SCAN-ID=9ec390ba-8c63-4eb6-898b-a2aacce6f54f" \
   "RUNNER_TEMP=/tmp" \
   node ./dist/index.js
