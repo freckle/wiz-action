@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import type { HttpClient } from "@actions/http-client";
 import * as http from "@actions/http-client";
 
-import type { WizCredentials, WizConfig } from "./wiz-config";
+import type { WizCredentials, WizIdP } from "./wiz-config";
 
 const JSON_HEADERS = {
   accept: "application/json",
@@ -86,11 +86,11 @@ export type Severity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export async function fetch(
   scanId: string,
-  config: WizConfig,
+  credentials: WizCredentials,
+  apiEndpointUrl: string,
+  apiIdP: WizIdP,
 ): Promise<ScanResult> {
   const client = new http.HttpClient();
-  const { credentials, apiConfig } = config;
-  const { apiEndpointUrl, apiIdP } = apiConfig;
   const token = await getAccessToken(client, credentials, apiIdP);
   const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId);
   core.debug(`Raw body: ${body}`);

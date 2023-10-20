@@ -3,7 +3,7 @@ import * as tc from "@actions/tool-cache";
 import type { WizCredentials } from "./wiz-config";
 
 export type WizScanResult = {
-  scanId: string | null;
+  scanId: string;
   scanPassed: boolean;
 };
 
@@ -51,6 +51,10 @@ class WizCLI {
 
     if (ec !== 0 && ec !== 4) {
       throw new Error(`wiz scan errored, status: ${ec}`);
+    }
+
+    if (!scanId) {
+      throw new Error("Unable to parse Scan Id from report");
     }
 
     const scanPassed = ec === 0;

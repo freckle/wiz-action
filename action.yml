@@ -29,9 +29,6 @@ inputs:
     description: "Pull the image before scanning?"
     required: true
     default: "false"
-  testing-scan-id:
-    description: "An existing scan-id, for testing report fetching"
-    required: false
 outputs:
   scan-id:
     description: "Id of Scan Report"
