@@ -146,16 +146,16 @@ function run() {
                     ec = _b.sent();
                     switch (ec) {
                         case 0:
-                            core.setOutput("result", "success");
+                            core.setOutput("scan-result", "success");
                             break;
                         case 4:
-                            core.setOutput("result", "failed");
+                            core.setOutput("scan-result", "failed");
                             if (fail_1) {
                                 core.setFailed("Image ".concat(image, " does not satisfy ").concat(policies !== "" ? "custom policies" : "default policies"));
                             }
                             break;
                         default:
-                            core.setOutput("result", "error");
+                            core.setOutput("scan-result", "error");
                             throw new Error("wiz scan failed, status: ".concat(ec));
                     }
                     return [3, 7];
