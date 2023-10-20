@@ -72,15 +72,17 @@ var wc = __importStar(__nccwpck_require__(9627));
 var sr = __importStar(__nccwpck_require__(6889));
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var clientId, clientSecret, apiIdP, apiRegion, image, policies, pull, fail_1, testScanId, credentials, config, result, wizcli, _a, scanId, scanPassed, config, result, error_1, error_2;
+        var clientId, clientSecret, apiEndpointUrl, apiIdP, image, policies, pull, fail_1, testScanId, credentials, config, result, wizcli, _a, scanId, scanPassed, config, result, error_1, error_2;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 11, , 12]);
                     clientId = core.getInput("wiz-client-id", { required: true });
                     clientSecret = core.getInput("wiz-client-secret", { required: true });
-                    apiIdP = core.getInput("wiz-api-idp", { required: false });
-                    apiRegion = core.getInput("wiz-api-region", { required: false });
+                    apiEndpointUrl = core.getInput("wiz-api-endpoint-url", {
+                        required: false,
+                    });
+                    apiIdP = core.getInput("wiz-api-idp", { required: true });
                     image = core.getInput("image", { required: true });
                     policies = core.getInput("custom-policies", { required: false });
                     pull = core.getBooleanInput("pull", { required: true });
@@ -88,7 +90,7 @@ function run() {
                     testScanId = core.getInput("test-scan-id", { required: false });
                     credentials = { clientId: clientId, clientSecret: clientSecret };
                     if (!(testScanId !== "")) return [3, 2];
-                    config = { credentials: credentials, apiConfig: { apiIdP: apiIdP, apiRegion: apiRegion } };
+                    config = { credentials: credentials, apiConfig: { apiEndpointUrl: apiEndpointUrl, apiIdP: apiIdP } };
                     return [4, sr.fetch(testScanId, config)];
                 case 1:
                     result = _b.sent();
@@ -106,11 +108,11 @@ function run() {
                     return [4, wizcli.scan(image, policies)];
                 case 6:
                     _a = _b.sent(), scanId = _a.scanId, scanPassed = _a.scanPassed;
-                    if (!(apiIdP && apiRegion && scanId)) return [3, 10];
+                    if (!(scanId && apiEndpointUrl !== "")) return [3, 10];
                     _b.label = 7;
                 case 7:
                     _b.trys.push([7, 9, , 10]);
-                    config = { credentials: credentials, apiConfig: { apiIdP: apiIdP, apiRegion: apiRegion } };
+                    config = { credentials: credentials, apiConfig: { apiEndpointUrl: apiEndpointUrl, apiIdP: apiIdP } };
                     return [4, sr.fetch(scanId, config)];
                 case 8:
                     result = _b.sent();
@@ -262,17 +264,17 @@ function scanAnalyticsCount(analytics, severity) {
 }
 function fetch(scanId, config) {
     return __awaiter(this, void 0, void 0, function () {
-        var client, credentials, apiConfig, apiIdP, apiRegion, token, body;
+        var client, credentials, apiConfig, apiEndpointUrl, apiIdP, token, body;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     client = new http.HttpClient();
                     credentials = config.credentials, apiConfig = config.apiConfig;
-                    apiIdP = apiConfig.apiIdP, apiRegion = apiConfig.apiRegion;
+                    apiEndpointUrl = apiConfig.apiEndpointUrl, apiIdP = apiConfig.apiIdP;
                     return [4, getAccessToken(client, credentials, apiIdP)];
                 case 1:
                     token = _a.sent();
-                    return [4, getCICDScanQL(client, token, apiRegion, scanId)];
+                    return [4, getCICDScanQL(client, token, apiEndpointUrl, scanId)];
                 case 2:
                     body = _a.sent();
                     core.debug("Raw body: ".concat(body));
@@ -323,12 +325,12 @@ function getAccessToken(client, credentials, apiIdP) {
         });
     });
 }
-function getCICDScanQL(client, accessToken, apiRegion, scanId) {
+function getCICDScanQL(client, accessToken, apiEndpointUrl, scanId) {
     return __awaiter(this, void 0, void 0, function () {
         var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4, client.post("https://api.".concat(apiRegion, ".app.wiz.io/graphql"), JSON.stringify({ query: "query{cicdScan(id:\"".concat(scanId, "\"){resultJSON}}") }), __assign({ authorization: "bearer ".concat(accessToken) }, JSON_HEADERS))];
+                case 0: return [4, client.post(apiEndpointUrl, JSON.stringify({ query: "query{cicdScan(id:\"".concat(scanId, "\"){resultJSON}}") }), __assign({ authorization: "bearer ".concat(accessToken) }, JSON_HEADERS))];
                 case 1:
                     response = _a.sent();
                     return [4, response.readBody()];
