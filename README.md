@@ -1,21 +1,60 @@
-# TypeScript Action Template
+# Wiz Action
 
-Our custom template repository for GitHub Actions implemented in TypeScript.
+This action roughly implements [this configuration][docs] to scan docker images
+with the Wiz CLI.
 
-[Creating a repository from a template][docs].
-
-[docs]: https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template
-
-**NOTE**: Be sure to look for strings like "TODO" or "Action name" and update
-them accordingly.
+[docs]: https://docs.wiz.io/wiz-docs/docs/github-pipeline#image-scan
 
 ## Usage
 
 ```yaml
-- uses: freckle/TODO-action@v1
+- run: docker build --tag myimage .
+- uses: freckle/wiz-action@v1
+  with:
+    wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
+    wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
+    image: myimage
+```
+
+## Usage with Buildx Action
+
+```yaml
+- id: build
+  uses: docker/build-push-action@v5
+  with:
+    tags: ${{ steps.meta.outputs.tags }}
+    load: true # required so we can scan it
+
+- uses: freckle/wiz-action@v1
+  with:
+    wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
+    wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
+    image: ${{ steps.build.outputs.imageid }}
+    custom-policies: tvm_automation_policy
 ```
 
 ## Inputs and Outputs
+
+### Inputs
+
+**Required**:
+
+- `wiz-client-id`: Wiz [Service Account] Client Id
+- `wiz-client-secret`: Wiz [Service Account] Client Secret
+- `image`: The image to scan
+
+[service account]: https://docs.wiz.io/wiz-docs/docs/set-up-wiz-cli#generate-a-wiz-service-account-key
+
+**Optional**:
+
+- `custom-policies`: Custom policies to use (comma-separated).
+- `fail`: Fail the job if the image violates policy? Default is `true`. Note
+  that scan _errors_ will fail the job regardless of this setting.
+- `pull`: Run `docker pull <image>` before scanning? Default is `false`.
+
+### Outputs
+
+- `scan-result`: the outcome of the scan, one of `passed`, `failed`, or `error`.
 
 See [action.yml](./action.yml) for a complete list of inputs and outputs.
 
