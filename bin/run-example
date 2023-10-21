@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v act &>/dev/null; then
+  echo "Install act to use this script" >&2
+  echo "https://github.com/nektos/act#installation" >&2
+  exit 1
+fi
+
+if [[ ! -f ./.env ]]; then
+  echo ".env not found, create it based on .env.example" >&2
+  exit 1
+fi
+
+if ((${UPDATE_DIST:-1})); then
+  echo "Building to ensure up-to-date dist (use UPDATE_DIST=0 to skip)"
+  yarn build
+fi
+
+exec act pull_request \
+  -W .github/workflows/example.yaml \
+  -j example \
+  --secret-file ./.env
