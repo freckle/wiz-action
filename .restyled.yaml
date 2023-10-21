@@ -1,11 +1,11 @@
 restylers:
   - clang-format:
       enabled: false
-  - jq:
-      enabled: false # prefer prettier-json
   - prettier:
       include:
         - "src/**/*.ts"
+  - prettier-json:
+      enabled: false # use jq
   - whitespace:
       include:
         - "**/*"
