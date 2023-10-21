@@ -12,7 +12,7 @@ if [[ ! -f ./.env ]]; then
   exit 1
 fi
 
-if ((${UPDATE_DIST:-1})); then
+if (("${UPDATE_DIST:-1}")); then
   echo "Building to ensure up-to-date dist (use UPDATE_DIST=0 to skip)"
   yarn build
 fi
