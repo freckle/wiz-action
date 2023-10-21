@@ -7,6 +7,10 @@ on:
 
 jobs:
   example:
+    # Skip if Dependabot. For now, we'll rely only on the types to ensure
+    # dependency updates are safe, rather than share the Wiz secrets so this can
+    # run.
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
