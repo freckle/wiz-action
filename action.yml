@@ -23,6 +23,8 @@ inputs:
     required: true
     default: "false"
 outputs:
+  scan-id:
+    description: "Id of Scan Report"
   scan-result:
     description: "Outcome of scan, one of passed|failed|error"
 runs:

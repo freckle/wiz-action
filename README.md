@@ -54,6 +54,7 @@ with the Wiz CLI.
 
 ### Outputs
 
+- `scan-id`: the Id of the Scan Result report.
 - `scan-result`: the outcome of the scan, one of `passed`, `failed`, or `error`.
 
 See [action.yml](./action.yml) for a complete list of inputs and outputs.
