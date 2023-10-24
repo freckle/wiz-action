@@ -19,7 +19,7 @@ test("Failed with cpes and osPackages", () => {
     .stringify();
 
   expect(summary).toBe(
-    `<h1>❌statsd/statsd failed some policies</h1>
+    `<h1>❌ statsd/statsd failed some policies</h1>
 <ul><li><strong>Default vulnerabilities policy</strong>: This image contains 193 CRITICAL vulnerabilities (with fixes), which is greater than the policy threshold (1)</li></ul>
 <a href="https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'abc123)">View report on Wiz</a>
 `,
@@ -42,7 +42,7 @@ test("Passed with osPackages", () => {
 
   // See https://github.com/actions/toolkit/issues/1567 about the extra <ul>
   expect(summary).toBe(
-    `<h1>✅statsd/statsd passed all policies</h1>
+    `<h1>✅ statsd/statsd passed all policies</h1>
 <ul>
 <a href="https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'abc123)">View report on Wiz</a>
 `,
