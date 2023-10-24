@@ -175,8 +175,8 @@ export function buildSummary(
 
   const title =
     matches.length === 0
-      ? `✅${image} passed all policies`
-      : `❌${image} failed some policies`;
+      ? `✅ ${image} passed all policies`
+      : `❌ ${image} failed some policies`;
 
   const link = `https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'${scanId})`;
 
