@@ -396,8 +396,8 @@ function buildSummary(image, scanId, result) {
         return "<strong>".concat(name, "</strong>: This image contains ").concat(cveCount, " ").concat(severity, " vulnerabilities").concat(withFixes, ", which is greater than the policy threshold (").concat(packageCountThreshold, ")");
     });
     var title = matches.length === 0
-        ? "\u2705".concat(image, " passed all policies")
-        : "\u274C".concat(image, " failed some policies");
+        ? "\u2705 ".concat(image, " passed all policies")
+        : "\u274C ".concat(image, " failed some policies");
     var link = "https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'".concat(scanId, ")");
     return core.summary
         .addHeading(title)
