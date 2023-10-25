@@ -1,0 +1,186 @@
+           _            _ _
+ __      _(_)____   ___| (_)
+ \ \ /\ / / |_  /  / __| | |
+  \ V  V /| |/ /  | (__| | |
+   \_/\_/ |_/___|  \___|_|_|
+
+
+Preparing to scan Docker image ***.dkr.ecr.us-east-1.amazonaws.com/frontrow/faktory-ent:edge
+
+
+Creating temporary directory for image
+
+
+Getting scan parameters
+
+
+SUCCESS: Ready to scan Docker image ***.dkr.ecr.us-east-1.amazonaws.com/frontrow/faktory-ent:edge
+
+
+Scanning Docker image ***.dkr.ecr.us-east-1.amazonaws.com/frontrow/faktory-ent@sha256:0573a41f8a1d604a93be15a962be8769b070bc2131a3c374c07521f59e43d00f
+
+
+Scanning Docker image ***.dkr.ecr.us-east-1.amazonaws.com/frontrow/faktory-ent:edge with policy tvm_automation_policy
+
+
+SUCCESS: Scanned Docker image
+
+
+Uploading scan results for analysis on Wiz
+
+
+Getting scan results
+
+
+SUCCESS: Docker image scan analysis ready
+OS Package vulnerabilities:
+    Name: busybox, Version: 1.32.1-r6
+        CVE-2021-42378, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42378
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42379, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42379
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2022-28391, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-28391
+            CVSS score: 8.8, CVSS exploitability score: 2.8
+            Fixed version: 1.32.1-r8
+        CVE-2022-30065, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-30065
+            CVSS score: 7.8, CVSS exploitability score: 1.8
+            Fixed version: 1.32.1-r9
+        CVE-2021-42383, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42383
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42384, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42384
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42385, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42385
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42380, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42380
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42381, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42381
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42382, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42382
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42386, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42386
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42374, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2021-42374
+            CVSS score: 5.3, CVSS exploitability score: 1
+            Fixed version: 1.32.1-r7
+        CVE-2021-42375, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2021-42375
+            CVSS score: 5.5, CVSS exploitability score: 1.8
+            Fixed version: 1.32.1-r7
+    Name: libcrypto1.1, Version: 1.1.1l-r0
+        CVE-2022-0778, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-0778
+            CVSS score: 7.5, CVSS exploitability score: 3.9
+            Fixed version: 1.1.1n-r0
+            Has public exploit
+        CVE-2022-2097, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2022-2097
+            CVSS score: 5.3, CVSS exploitability score: 3.9
+            Fixed version: 1.1.1q-r0
+    Name: libssl1.1, Version: 1.1.1l-r0
+        CVE-2022-0778, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-0778
+            CVSS score: 7.5, CVSS exploitability score: 3.9
+            Fixed version: 1.1.1n-r0
+            Has public exploit
+        CVE-2022-2097, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2022-2097
+            CVSS score: 5.3, CVSS exploitability score: 3.9
+            Fixed version: 1.1.1q-r0
+    Name: ncurses-libs, Version: 6.2_p20210109-r0
+        CVE-2022-29458, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-29458
+            CVSS score: 7.1, CVSS exploitability score: 1.8
+            Fixed version: 6.2_p20210109-r1
+    Name: ncurses-terminfo-base, Version: 6.2_p20210109-r0
+        CVE-2022-29458, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-29458
+            CVSS score: 7.1, CVSS exploitability score: 1.8
+            Fixed version: 6.2_p20210109-r1
+    Name: redis, Version: 6.0.15-r0
+        CVE-2021-32687, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-32687
+            CVSS score: 7.5, CVSS exploitability score: 1.6
+            Fixed version: 6.0.16-r0
+        CVE-2021-32627, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-32627
+            CVSS score: 7.5, CVSS exploitability score: 1.6
+            Fixed version: 6.0.16-r0
+        CVE-2021-32762, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-32762
+            CVSS score: 8.8, CVSS exploitability score: 2.8
+            Fixed version: 6.0.16-r0
+        CVE-2021-32628, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-32628
+            CVSS score: 7.5, CVSS exploitability score: 1.6
+            Fixed version: 6.0.16-r0
+        CVE-2021-32675, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-32675
+            CVSS score: 7.5, CVSS exploitability score: 3.9
+            Fixed version: 6.0.16-r0
+        CVE-2021-32626, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-32626
+            CVSS score: 8.8, CVSS exploitability score: 2.8
+            Fixed version: 6.0.16-r0
+        CVE-2021-41099, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-41099
+            CVSS score: 7.5, CVSS exploitability score: 1.6
+            Fixed version: 6.0.16-r0
+        CVE-2021-32672, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2021-32672
+            CVSS score: 4.3, CVSS exploitability score: 2.8
+            Fixed version: 6.0.16-r0
+    Name: ssl_client, Version: 1.32.1-r6
+        CVE-2021-42385, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42385
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42386, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42386
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2022-30065, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-30065
+            CVSS score: 7.8, CVSS exploitability score: 1.8
+            Fixed version: 1.32.1-r9
+        CVE-2021-42382, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42382
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42379, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42379
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2022-28391, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2022-28391
+            CVSS score: 8.8, CVSS exploitability score: 2.8
+            Fixed version: 1.32.1-r8
+        CVE-2021-42378, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42378
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42380, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42380
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42381, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42381
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42383, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42383
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42384, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2021-42384
+            CVSS score: 7.2, CVSS exploitability score: 1.2
+            Fixed version: 1.32.1-r7
+        CVE-2021-42375, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2021-42375
+            CVSS score: 5.5, CVSS exploitability score: 1.8
+            Fixed version: 1.32.1-r7
+        CVE-2021-42374, Severity: MEDIUM, Source: https://security.alpinelinux.org/vuln/CVE-2021-42374
+            CVSS score: 5.3, CVSS exploitability score: 1
+            Fixed version: 1.32.1-r7
+    Name: zlib, Version: 1.2.11-r3
+        Failed policy: tvm_automation_policy
+        CVE-2022-37434, Severity: CRITICAL, Source: https://security.alpinelinux.org/vuln/CVE-2022-37434
+            CVSS score: 9.8, CVSS exploitability score: 3.9
+            Fixed version: 1.2.12-r2
+            Has public exploit
+        CVE-2018-25032, Severity: HIGH, Source: https://security.alpinelinux.org/vuln/CVE-2018-25032
+            CVSS score: 7.5, CVSS exploitability score: 3.9
+            Fixed version: 1.2.12-r0
+
+Evaluated policy: tvm_automation_policy
+Failed policy: tvm_automation_policy
+Vulnerable packages: CRITICAL: 1, HIGH: 7, MEDIUM: 0, LOW: 0, INFORMATIONAL: 0
+    Total: 8
+Vulnerabilities: CRITICAL: 1, HIGH: 34, MEDIUM: 7, LOW: 0, INFORMATIONAL: 0
+    Total: 42, out of which 42 are fixable
+Directories scanned: 120, Files scanned: 278
+Scan results: FAILED. Container image does not meet policy requirements
+Scan Report: (https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'aa24bcf7-b54a-4514-92d6-2d6651c7abb8))
+Using mount/mountWithLayers drivers is recommended to decrease image scan time. For more information - https://docs.wiz.io/wiz-docs/docs/wiz-cli-cont-img#scan-drivers
+FAILED: Scan failed - policy failure
