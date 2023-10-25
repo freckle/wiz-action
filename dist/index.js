@@ -478,7 +478,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getWizCLI = void 0;
+exports.ScanIdListener = exports.getWizCLI = void 0;
 var exec = __importStar(__nccwpck_require__(1514));
 var tc = __importStar(__nccwpck_require__(7784));
 var WizCLI = (function () {
@@ -509,27 +509,24 @@ var WizCLI = (function () {
     };
     WizCLI.prototype.scan = function (image, policies) {
         return __awaiter(this, void 0, void 0, function () {
-            var args, scanId, listener, ec, scanPassed;
+            var args, listener, ec, scanId, scanPassed;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
-                        scanId = null;
-                        listener = (function (data) {
-                            var match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
-                            if (match && match[1]) {
-                                scanId = match[1];
-                            }
-                        }).bind(this);
+                        listener = new ScanIdListener();
                         return [4, exec.exec(this.wizcli, args, {
                                 ignoreReturnCode: true,
-                                listeners: { stderr: listener },
+                                listeners: {
+                                    stderr: listener.listen,
+                                },
                             })];
                     case 1:
                         ec = _a.sent();
                         if (ec !== 0 && ec !== 4) {
                             throw new Error("wiz scan errored, status: ".concat(ec));
                         }
+                        scanId = listener.scanId;
                         if (!scanId) {
                             throw new Error("Unable to parse Scan Id from report");
                         }
@@ -579,6 +576,20 @@ function getWizInstallUrl() {
     }
     throw new Error("Unsupported platform or architecture: ".concat(process.platform, "/").concat(process.arch));
 }
+var ScanIdListener = (function () {
+    function ScanIdListener() {
+        this.listen = this.listen.bind(this);
+        this.scanId = null;
+    }
+    ScanIdListener.prototype.listen = function (data) {
+        var match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
+        if (match && match[1]) {
+            this.scanId = match[1];
+        }
+    };
+    return ScanIdListener;
+}());
+exports.ScanIdListener = ScanIdListener;
 
 
 /***/ }),
