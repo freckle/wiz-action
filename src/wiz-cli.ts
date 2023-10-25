@@ -35,23 +35,20 @@ class WizCLI {
       policies ? ["--policy", policies] : [],
     );
 
-    let scanId: string | null = null;
-
-    const listener = ((data: Buffer) => {
-      const match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
-      if (match && match[1]) {
-        scanId = match[1];
-      }
-    }).bind(this);
+    const listener = new ScanIdListener();
 
     const ec = await exec.exec(this.wizcli, args, {
       ignoreReturnCode: true,
-      listeners: { stderr: listener },
+      listeners: {
+        stderr: listener.listen,
+      },
     });
 
     if (ec !== 0 && ec !== 4) {
       throw new Error(`wiz scan errored, status: ${ec}`);
     }
+
+    const scanId = listener.scanId;
 
     if (!scanId) {
       throw new Error("Unable to parse Scan Id from report");
@@ -91,4 +88,21 @@ function getWizInstallUrl(): string {
   throw new Error(
     `Unsupported platform or architecture: ${process.platform}/${process.arch}`,
   );
+}
+
+export class ScanIdListener {
+  scanId: string | null;
+
+  constructor() {
+    // Ensure setting this.scanId within listen() does the right thing
+    this.listen = this.listen.bind(this);
+    this.scanId = null;
+  }
+
+  listen(data: Buffer): void {
+    const match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
+    if (match && match[1]) {
+      this.scanId = match[1];
+    }
+  }
 }
