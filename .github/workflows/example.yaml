@@ -28,7 +28,16 @@ jobs:
 
       - name: Verify scan result
         run: |
+          id=${{ steps.scan.outputs.scan-id }}
           result=${{ steps.scan.outputs.scan-result }}
+
+          echo "id=$scan_id"
+          echo "result=$result"
+
+          if [[ -z "$id" ]]; then
+            echo "Scan step should've set a scan-id" >&2
+            exit 1
+          fi
 
           if [[ "$result" != "failed" ]]; then
             echo "Scan step should've reported scan-result=failed" >&2
