@@ -515,12 +515,12 @@ var WizCLI = (function () {
                     case 0:
                         args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
                         scanId = null;
-                        listener = function (data) {
+                        listener = (function (data) {
                             var match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
                             if (match && match[1]) {
                                 scanId = match[1];
                             }
-                        };
+                        }).bind(this);
                         return [4, exec.exec(this.wizcli, args, {
                                 ignoreReturnCode: true,
                                 listeners: { stderr: listener },
