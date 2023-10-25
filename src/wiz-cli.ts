@@ -37,16 +37,16 @@ class WizCLI {
 
     let scanId: string | null = null;
 
+    const listener = (data: Buffer) => {
+      const match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
+      if (match && match[1]) {
+        scanId = match[1];
+      }
+    };
+
     const ec = await exec.exec(this.wizcli, args, {
       ignoreReturnCode: true,
-      listeners: {
-        stderr: (data: Buffer) => {
-          const match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
-          if (match && match[1]) {
-            scanId = match[1];
-          }
-        },
-      },
+      listeners: { stderr: listener },
     });
 
     if (ec !== 0 && ec !== 4) {
