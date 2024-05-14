@@ -136,7 +136,7 @@ var sr = __importStar(__nccwpck_require__(6889));
 var inputs_1 = __nccwpck_require__(6180);
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail_1, wizCredentials, wizcli, _b, scanId, scanPassed, result, summary, error_1, error_2;
+        var _a, wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail_1, wizCredentials, wizcli, _b, scanId, scanPassed, result, summary, error_1, resultUrlBase, resultUrlHash, resultUrl, error_2;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -182,11 +182,16 @@ function run() {
                     }
                     return [3, 9];
                 case 9:
+                    resultUrlBase = "https://app.wiz.io/reports/cicd-scans";
+                    resultUrlHash = fixedEncodeURIComponent("~(cicd_scan~'".concat(scanId, ")"));
+                    resultUrl = "".concat(resultUrlBase, "#").concat(resultUrlHash);
                     if (scanPassed) {
+                        core.info("Scan passed: ".concat(resultUrl));
                         core.setOutput("scan-id", scanId);
                         core.setOutput("scan-result", "success");
                     }
                     else {
+                        core.warning("Scan failed: ".concat(resultUrl));
                         core.setOutput("scan-id", scanId);
                         core.setOutput("scan-result", "failed");
                         if (fail_1) {
@@ -209,6 +214,11 @@ function run() {
                 case 11: return [2];
             }
         });
+    });
+}
+function fixedEncodeURIComponent(str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+        return "%" + c.charCodeAt(0).toString(16);
     });
 }
 run();
