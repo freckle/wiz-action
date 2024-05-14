@@ -51,10 +51,16 @@ async function run() {
       }
     }
 
+    const resultUrlBase = "https://app.wiz.io/reports/cicd-scans";
+    const resultUrlHash = fixedEncodeURIComponent(`~(cicd_scan~'${scanId})`);
+    const resultUrl = `${resultUrlBase}#${resultUrlHash}`;
+
     if (scanPassed) {
+      core.info(`Scan passed: ${resultUrl}`);
       core.setOutput("scan-id", scanId);
       core.setOutput("scan-result", "success");
     } else {
+      core.warning(`Scan failed: ${resultUrl}`);
       core.setOutput("scan-id", scanId);
       core.setOutput("scan-result", "failed");
 
@@ -75,6 +81,13 @@ async function run() {
       core.setFailed("Non-Error exception");
     }
   }
+}
+
+// https://stackoverflow.com/a/62436236
+function fixedEncodeURIComponent(str: string): string {
+  return encodeURIComponent(str).replace(/[!'()*]/g, (c) => {
+    return "%" + c.charCodeAt(0).toString(16);
+  });
 }
 
 run();
