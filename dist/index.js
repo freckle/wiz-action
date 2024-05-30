@@ -136,7 +136,7 @@ var sr = __importStar(__nccwpck_require__(6889));
 var inputs_1 = __nccwpck_require__(6180);
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail_1, wizCredentials, wizcli, _b, scanId, scanPassed, result, summary, error_1, resultUrlBase, resultUrlHash, resultUrl, error_2;
+        var _a, wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail_1, wizCredentials, wizcli, _b, scanId, scanPassed, result, summary, error_1, error_2;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -157,7 +157,7 @@ function run() {
                     return [4, wizcli.scan(image, customPolicies)];
                 case 4:
                     _b = _c.sent(), scanId = _b.scanId, scanPassed = _b.scanPassed;
-                    if (!wizApiEndpointUrl) return [3, 9];
+                    if (!(scanId && wizApiEndpointUrl)) return [3, 9];
                     _c.label = 5;
                 case 5:
                     _c.trys.push([5, 8, , 9]);
@@ -182,16 +182,11 @@ function run() {
                     }
                     return [3, 9];
                 case 9:
-                    resultUrlBase = "https://app.wiz.io/reports/cicd-scans";
-                    resultUrlHash = fixedEncodeURIComponent("~(cicd_scan~'".concat(scanId, ")"));
-                    resultUrl = "".concat(resultUrlBase, "#").concat(resultUrlHash);
                     if (scanPassed) {
-                        core.info("Scan passed: ".concat(resultUrl));
                         core.setOutput("scan-id", scanId);
                         core.setOutput("scan-result", "success");
                     }
                     else {
-                        core.warning("Scan failed: ".concat(resultUrl));
                         core.setOutput("scan-id", scanId);
                         core.setOutput("scan-result", "failed");
                         if (fail_1) {
@@ -214,11 +209,6 @@ function run() {
                 case 11: return [2];
             }
         });
-    });
-}
-function fixedEncodeURIComponent(str) {
-    return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-        return "%" + c.charCodeAt(0).toString(16);
     });
 }
 run();
@@ -488,7 +478,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getWizCLI = void 0;
+exports.parseScanId = exports.getWizCLI = void 0;
+var core = __importStar(__nccwpck_require__(2186));
 var exec = __importStar(__nccwpck_require__(1514));
 var tc = __importStar(__nccwpck_require__(7784));
 var WizCLI = (function () {
@@ -526,10 +517,7 @@ var WizCLI = (function () {
                         args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
                         scanId = null;
                         listener = function (data) {
-                            var match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
-                            if (match && match[1]) {
-                                scanId = match[1];
-                            }
+                            scanId = parseScanId(data.toString());
                         };
                         return [4, exec.exec(this.wizcli, args, {
                                 ignoreReturnCode: true,
@@ -544,7 +532,7 @@ var WizCLI = (function () {
                             throw new Error("wiz scan errored, status: ".concat(ec));
                         }
                         if (!scanId) {
-                            throw new Error("Unable to parse Scan Id from report");
+                            core.warning("Unable to parse Scan Id from report");
                         }
                         scanPassed = ec === 0;
                         return [2, {
@@ -576,6 +564,21 @@ function getWizCLI(credentials) {
     });
 }
 exports.getWizCLI = getWizCLI;
+var SCAN_REGEXES = [
+    new RegExp("cicd_scan~'([0-9a-f-]*)"),
+    new RegExp("cicd_scan%7E%27([0-9a-f-]*)%29"),
+];
+function parseScanId(str) {
+    var scanId = null;
+    SCAN_REGEXES.forEach(function (regex) {
+        var match = str.match(regex);
+        if (match && match[1]) {
+            scanId = match[1];
+        }
+    });
+    return scanId;
+}
+exports.parseScanId = parseScanId;
 function getWizInstallUrl() {
     switch (process.platform) {
         case "win32":
