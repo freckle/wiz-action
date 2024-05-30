@@ -38,7 +38,9 @@ class WizCLI {
     let scanId: string | null = null;
 
     const listener = (data: Buffer) => {
-      scanId = parseScanId(data.toString());
+      if (!scanId) {
+        scanId = parseScanId(data.toString());
+      }
     };
 
     const ec = await exec.exec(this.wizcli, args, {
@@ -75,6 +77,7 @@ export async function getWizCLI(credentials: WizCredentials): Promise<WizCLI> {
 
 const SCAN_REGEXES = [
   new RegExp("cicd_scan~'([0-9a-f-]*)"),
+  new RegExp("cicd_scan%7E%27([0-9a-f-]*)%29"),
 ];
 
 // exported for testing
