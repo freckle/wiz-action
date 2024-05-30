@@ -1,9 +1,10 @@
+import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as tc from "@actions/tool-cache";
 import type { WizCredentials } from "./wiz-config";
 
 export type WizScanResult = {
-  scanId: string;
+  scanId: string | null;
   scanPassed: boolean;
 };
 
@@ -56,7 +57,7 @@ class WizCLI {
     }
 
     if (!scanId) {
-      throw new Error("Unable to parse Scan Id from report");
+      core.warning("Unable to parse Scan Id from report");
     }
 
     const scanPassed = ec === 0;

@@ -30,7 +30,7 @@ async function run() {
     const wizcli = await wc.getWizCLI(wizCredentials);
     const { scanId, scanPassed } = await wizcli.scan(image, customPolicies);
 
-    if (wizApiEndpointUrl) {
+    if (scanId && wizApiEndpointUrl) {
       try {
         const result = await sr.fetch(
           scanId,
