@@ -76,24 +76,13 @@ export async function getWizCLI(credentials: WizCredentials): Promise<WizCLI> {
   return new WizCLI(wizcli, credentials).auth();
 }
 
-const SCAN_REGEXES = [
-  new RegExp("cicd_scan~'([0-9a-f-]*)"),
-  new RegExp("cicd_scan%7E%27([0-9a-f-]*)%29"),
-];
+// Example: "8221aac6-eae9-4867-bbb6-91fbd1092f45"
+const SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 
 // exported for testing
 export function parseScanId(str: string): string | null {
-  let scanId = null;
-
-  SCAN_REGEXES.forEach((regex) => {
-    const match = str.match(regex);
-
-    if (match && match[1]) {
-      scanId = match[1];
-    }
-  });
-
-  return scanId;
+  const match = str.match(SCAN_ID_FORMAT);
+  return match ? match[0] : null;
 }
 
 function getWizInstallUrl(): string {
