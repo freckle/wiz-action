@@ -38,10 +38,7 @@ class WizCLI {
     let scanId: string | null = null;
 
     const listener = (data: Buffer) => {
-      const match = data.toString().match(/cicd_scan~'([0-9a-f-]*)/);
-      if (match && match[1]) {
-        scanId = match[1];
-      }
+      scanId = parseScanId(data.toString());
     };
 
     const ec = await exec.exec(this.wizcli, args, {
@@ -74,6 +71,25 @@ export async function getWizCLI(credentials: WizCredentials): Promise<WizCLI> {
   const wizcli = await tc.downloadTool(wizUrl);
   await exec.exec("chmod", ["+x", wizcli]);
   return new WizCLI(wizcli, credentials).auth();
+}
+
+const SCAN_REGEXES = [
+  new RegExp("cicd_scan~'([0-9a-f-]*)"),
+];
+
+// exported for testing
+export function parseScanId(str: string): string | null {
+  let scanId = null;
+
+  SCAN_REGEXES.forEach((regex) => {
+    const match = str.match(regex);
+
+    if (match && match[1]) {
+      scanId = match[1];
+    }
+  });
+
+  return scanId;
 }
 
 function getWizInstallUrl(): string {
