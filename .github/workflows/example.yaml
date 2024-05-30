@@ -26,6 +26,13 @@ jobs:
           fail: false
           pull: true
 
+      - name: Verify Scan Id
+        run: |
+          if [[ -z "${{ steps.scan.outputs.scan-id }}" ]]; then
+            echo "Scan step should've set a scan-id, it did not" >&2
+            exit 1
+          fi
+
       - name: Verify scan result
         run: |
           result=${{ steps.scan.outputs.scan-result }}
