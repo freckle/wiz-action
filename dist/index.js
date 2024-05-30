@@ -517,7 +517,9 @@ var WizCLI = (function () {
                         args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
                         scanId = null;
                         listener = function (data) {
-                            scanId = parseScanId(data.toString());
+                            if (!scanId) {
+                                scanId = parseScanId(data.toString());
+                            }
                         };
                         return [4, exec.exec(this.wizcli, args, {
                                 ignoreReturnCode: true,
@@ -564,19 +566,10 @@ function getWizCLI(credentials) {
     });
 }
 exports.getWizCLI = getWizCLI;
-var SCAN_REGEXES = [
-    new RegExp("cicd_scan~'([0-9a-f-]*)"),
-    new RegExp("cicd_scan%7E%27([0-9a-f-]*)%29"),
-];
+var SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 function parseScanId(str) {
-    var scanId = null;
-    SCAN_REGEXES.forEach(function (regex) {
-        var match = str.match(regex);
-        if (match && match[1]) {
-            scanId = match[1];
-        }
-    });
-    return scanId;
+    var match = str.match(SCAN_ID_FORMAT);
+    return match ? match[0] : null;
 }
 exports.parseScanId = parseScanId;
 function getWizInstallUrl() {
