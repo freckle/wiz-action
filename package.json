@@ -27,7 +27,7 @@
     "@octokit/plugin-rest-endpoint-methods": "^13.2.4",
     "@octokit/types": "^13.4.1",
     "@types/jest": "^27.4.0",
-    "@types/node": "^20.14.12",
+    "@types/node": "^22.0.0",
     "@vercel/ncc": "^0.38.1",
     "jest": "^27.4.7",
     "prettier": "^3.3.3",
