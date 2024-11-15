@@ -28,7 +28,7 @@
     "@octokit/types": "^13.6.1",
     "@types/jest": "^27.4.0",
     "@types/node": "^22.9.0",
-    "@vercel/ncc": "^0.38.2",
+    "@vercel/ncc": "^0.38.3",
     "jest": "^27.4.7",
     "prettier": "^3.3.3",
     "ts-jest": "^27.1.3",
