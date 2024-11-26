@@ -25,7 +25,7 @@
   "devDependencies": {
     "@actions/glob": "^0.5.0",
     "@octokit/plugin-rest-endpoint-methods": "^13.2.6",
-    "@octokit/types": "^13.6.1",
+    "@octokit/types": "^13.6.2",
     "@types/jest": "^27.4.0",
     "@types/node": "^22.9.4",
     "@vercel/ncc": "^0.38.3",
