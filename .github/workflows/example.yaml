@@ -23,6 +23,7 @@ jobs:
           wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
           wiz-api-endpoint-url: ${{ vars.WIZ_API_ENDPOINT_URL }}
           image: statsd/statsd:v0.9.0 # has many, many CVEs
+          custom-policies: tvm_automation_policy
           fail: false
           pull: true
 
