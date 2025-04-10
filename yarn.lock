@@ -726,7 +726,7 @@
   dependencies:
     "@octokit/openapi-types" "^20.0.0"
 
-"@octokit/types@^13.1.0", "@octokit/types@^13.10.0":
+"@octokit/types@^13.1.0":
   version "13.10.0"
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-13.10.0.tgz#3e7c6b19c0236c270656e4ea666148c2b51fd1a3"
   integrity sha512-ifLaO34EbbPj0Xgro4G5lP5asESjwHracYJvVaPIyXMuiuXLlhic3S47cBdTb+jfODkTE5YtGCLt3Ay3+J97sA==
