@@ -178,12 +178,16 @@ export function buildSummary(
       ? `✅ ${image} passed all policies`
       : `❌ ${image} failed some policies`;
 
-  const link = `https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'${scanId})`;
+  const link = toScanUrl(scanId);
 
   return core.summary
     .addHeading(title)
     .addList(matches)
     .addLink("View report on Wiz", link);
+}
+
+export function toScanUrl(scanId: string): string {
+  return `https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'${scanId})`;
 }
 
 // Exported for use in tests
