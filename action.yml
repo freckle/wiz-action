@@ -35,7 +35,7 @@ outputs:
   scan-url:
     description: "URL of Scan Report"
   scan-result:
-    description: "Outcome of scan, one of passed|failed|error"
+    description: "Outcome of scan, one of passed|failed"
 runs:
   using: "node20"
   main: "dist/index.js"
