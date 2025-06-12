@@ -54,7 +54,7 @@ async function run() {
     if (scanPassed) {
       core.setOutput("scan-id", scanId);
       core.setOutput("scan-url", scanId ? sr.toScanUrl(scanId) : null);
-      core.setOutput("scan-result", "success");
+      core.setOutput("scan-result", "passed");
     } else {
       core.setOutput("scan-id", scanId);
       core.setOutput("scan-url", scanId ? sr.toScanUrl(scanId) : null);
