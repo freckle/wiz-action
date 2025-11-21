@@ -13,7 +13,7 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - id: scan
         name: Scan statsd/statsd:v0.9.0 with wiz
