@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@actions/core@^2.0.1", "@actions/core@^2.0.2":
+"@actions/core@^2.0.1":
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@actions/core/-/core-2.0.2.tgz#81c59e1f3437660d2148a064c1ba8e99931f2cf7"
   integrity sha512-Ast1V7yHbGAhplAsuVlnb/5J8Mtr/Zl6byPPL+Qjq3lmfIgWF1ak1iYfF/079cRERiuTALTXkSuEUdZeDCfGtA==
