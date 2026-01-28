@@ -4420,7 +4420,7 @@ const fs = __importStar(__nccwpck_require__(9896));
 const mm = __importStar(__nccwpck_require__(8036));
 const os = __importStar(__nccwpck_require__(857));
 const path = __importStar(__nccwpck_require__(6928));
-const httpm = __importStar(__nccwpck_require__(8389));
+const httpm = __importStar(__nccwpck_require__(4844));
 const semver = __importStar(__nccwpck_require__(9318));
 const stream = __importStar(__nccwpck_require__(2203));
 const util = __importStar(__nccwpck_require__(9023));
@@ -5649,8 +5649,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(8389);
-const auth_1 = __nccwpck_require__(5499);
+const http_client_1 = __nccwpck_require__(8835);
+const auth_1 = __nccwpck_require__(7580);
 const core_1 = __nccwpck_require__(7409);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
@@ -6242,7 +6242,7 @@ function toCommandProperties(annotationProperties) {
 
 /***/ }),
 
-/***/ 5499:
+/***/ 7580:
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
@@ -6330,7 +6330,7 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 
 /***/ }),
 
-/***/ 8389:
+/***/ 8835:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -6384,7 +6384,7 @@ exports.getProxyUrl = getProxyUrl;
 exports.isHttps = isHttps;
 const http = __importStar(__nccwpck_require__(8611));
 const https = __importStar(__nccwpck_require__(5692));
-const pm = __importStar(__nccwpck_require__(9869));
+const pm = __importStar(__nccwpck_require__(6416));
 const tunnel = __importStar(__nccwpck_require__(770));
 const undici_1 = __nccwpck_require__(8229);
 var HttpCodes;
@@ -7074,7 +7074,7 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 
 /***/ }),
 
-/***/ 9869:
+/***/ 6416:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
