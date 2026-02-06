@@ -20,7 +20,7 @@
     "@actions/exec": "^2.0.0",
     "@actions/github": "^9.0.0",
     "@actions/http-client": "^3.0.2",
-    "@actions/tool-cache": "^3.0.1"
+    "@actions/tool-cache": "^4.0.0"
   },
   "devDependencies": {
     "@actions/glob": "^0.6.1",
