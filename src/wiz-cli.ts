@@ -85,18 +85,25 @@ export function parseScanId(str: string): string | null {
   return match ? match[0] : null;
 }
 
-function getWizInstallUrl(): string {
+// exported for testing
+export function getWizInstallUrl(): string {
   switch (process.platform) {
     case "win32":
-      return "https://wizcli.app.wiz.io/latest/wizcli-windows-amd64.exe";
+      return "https://downloads.wiz.io/wizcli/latest/wizcli-windows-amd64.exe";
     case "darwin":
-      return "https://wizcli.app.wiz.io/latest/wizcli-darwin-amd64";
+      switch (process.arch) {
+        case "x64":
+          return "https://downloads.wiz.io/wizcli/latest/wizcli-darwin-amd64";
+        case "arm64":
+          return "https://downloads.wiz.io/wizcli/latest/wizcli-darwin-arm64";
+      }
+      break;
     case "linux":
       switch (process.arch) {
         case "x64":
-          return "https://wizcli.app.wiz.io/latest/wizcli-linux-amd64";
+          return "https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64";
         case "arm64":
-          return "https://wizcli.app.wiz.io/latest/wizcli-linux-arm64";
+          return "https://downloads.wiz.io/wizcli/latest/wizcli-linux-arm64";
       }
   }
 
