@@ -1,9 +1,9 @@
 import * as exec from "@actions/exec";
 import * as core from "@actions/core";
 
-import * as wc from "./wiz-cli";
-import * as sr from "./scan-result";
-import { getInputs } from "./inputs";
+import * as wc from "./wiz-cli.js"
+import * as sr from "./scan-result.js"
+import { getInputs } from "./inputs.js"
 
 async function run() {
   try {

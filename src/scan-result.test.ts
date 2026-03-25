@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import * as fs from "fs";
-import * as scanResult from "./scan-result";
+import * as scanResult from "./scan-result.js"
 
 beforeEach(() => {
   core.summary.emptyBuffer();

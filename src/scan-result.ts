@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import type { HttpClient } from "@actions/http-client";
 import * as http from "@actions/http-client";
 
-import type { WizCredentials, WizIdP } from "./wiz-config";
+import type { WizCredentials, WizIdP } from "./wiz-config.js"
 
 const JSON_HEADERS = {
   accept: "application/json",
