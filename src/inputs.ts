@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 
-import type { WizIdP } from "./wiz-config";
-import { parseWizIdP } from "./wiz-config";
+import type { WizIdP } from "./wiz-config.js"
+import { parseWizIdP } from "./wiz-config.js"
 
 export type Inputs = {
   wizClientId: string;
