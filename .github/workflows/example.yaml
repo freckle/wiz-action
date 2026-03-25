@@ -7,10 +7,13 @@ on:
 
 jobs:
   example:
-    # Skip if Dependabot. For now, we'll rely only on the types to ensure
-    # dependency updates are safe, rather than share the Wiz secrets so this can
-    # run.
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    # For PRs, skip if dependabot or from a fork. Such PRs have no secrets
+    # access, so we'll rely only on types and unit tests there.
+    if: |
+      github.ref_name == 'main' || (
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.actor != 'dependabot[bot]'
+      )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
