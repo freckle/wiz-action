@@ -1,4 +1,4 @@
-import { parseScanId, getWizInstallUrl } from "./wiz-cli.js";
+import { parseScanId, getWizInstallUrl } from "./wiz-cli.js"
 
 describe("parseScanId", () => {
   it("parses un-encoded scan-id URLs", () => {
