@@ -34305,131 +34305,64 @@ function _unique(values) {
 }
 //# sourceMappingURL=tool-cache.js.map
 ;// CONCATENATED MODULE: ./lib/wiz-cli.js
-var wiz_cli_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 
 
 
-var WizCLI = (function () {
-    function WizCLI(wizcli, credentials) {
+class WizCLI {
+    wizcli;
+    credentials;
+    constructor(wizcli, credentials) {
         this.wizcli = wizcli;
         this.credentials = credentials;
     }
-    WizCLI.prototype.auth = function () {
-        return wiz_cli_awaiter(this, void 0, void 0, function () {
-            var _a, clientId, clientSecret;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = this.credentials, clientId = _a.clientId, clientSecret = _a.clientSecret;
-                        return [4, exec_exec(this.wizcli, [
-                                "auth",
-                                "--id",
-                                clientId,
-                                "--secret",
-                                clientSecret,
-                            ])];
-                    case 1:
-                        _b.sent();
-                        return [2, this];
-                }
-            });
-        });
-    };
-    WizCLI.prototype.scan = function (image, policies) {
-        return wiz_cli_awaiter(this, void 0, void 0, function () {
-            var args, scanId, listener, ec, scanPassed;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
-                        scanId = null;
-                        listener = function (data) {
-                            if (!scanId) {
-                                scanId = parseScanId(data.toString());
-                            }
-                        };
-                        return [4, exec_exec(this.wizcli, args, {
-                                ignoreReturnCode: true,
-                                listeners: {
-                                    stdout: listener,
-                                    stderr: listener,
-                                },
-                            })];
-                    case 1:
-                        ec = _a.sent();
-                        if (ec !== 0 && ec !== 4) {
-                            throw new Error("wiz scan errored, status: ".concat(ec));
-                        }
-                        if (!scanId) {
-                            warning("Unable to parse Scan Id from report");
-                        }
-                        scanPassed = ec === 0;
-                        return [2, {
-                                scanId: scanId,
-                                scanPassed: scanPassed,
-                            }];
-                }
-            });
-        });
-    };
-    return WizCLI;
-}());
-function getWizCLI(credentials) {
-    return wiz_cli_awaiter(this, void 0, void 0, function () {
-        var wizUrl, wizcli;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    wizUrl = getWizInstallUrl();
-                    return [4, downloadTool(wizUrl)];
-                case 1:
-                    wizcli = _a.sent();
-                    return [4, exec_exec("chmod", ["+x", wizcli])];
-                case 2:
-                    _a.sent();
-                    return [2, new WizCLI(wizcli, credentials).auth()];
+    async auth() {
+        const { clientId, clientSecret } = this.credentials;
+        await exec_exec(this.wizcli, [
+            "auth",
+            "--id",
+            clientId,
+            "--secret",
+            clientSecret,
+        ]);
+        return this;
+    }
+    async scan(image, policies) {
+        const args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
+        let scanId = null;
+        const listener = (data) => {
+            if (!scanId) {
+                scanId = parseScanId(data.toString());
             }
+        };
+        const ec = await exec_exec(this.wizcli, args, {
+            ignoreReturnCode: true,
+            listeners: {
+                stdout: listener,
+                stderr: listener,
+            },
         });
-    });
+        if (ec !== 0 && ec !== 4) {
+            throw new Error(`wiz scan errored, status: ${ec}`);
+        }
+        if (!scanId) {
+            warning("Unable to parse Scan Id from report");
+        }
+        const scanPassed = ec === 0;
+        return {
+            scanId,
+            scanPassed,
+        };
+    }
 }
-var SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
+async function getWizCLI(credentials) {
+    const wizUrl = getWizInstallUrl();
+    const wizcli = await downloadTool(wizUrl);
+    await exec_exec("chmod", ["+x", wizcli]);
+    return new WizCLI(wizcli, credentials).auth();
+}
+const SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 function parseScanId(str) {
-    var match = str.match(SCAN_ID_FORMAT);
+    const match = str.match(SCAN_ID_FORMAT);
     return match ? match[0] : null;
 }
 function getWizInstallUrl() {
@@ -34452,60 +34385,13 @@ function getWizInstallUrl() {
                     return "https://downloads.wiz.io/wizcli/latest/wizcli-linux-arm64";
             }
     }
-    throw new Error("Unsupported platform or architecture: ".concat(process.platform, "/").concat(process.arch));
+    throw new Error(`Unsupported platform or architecture: ${process.platform}/${process.arch}`);
 }
 
 ;// CONCATENATED MODULE: ./lib/scan-result.js
-var __assign = (undefined && undefined.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var scan_result_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var scan_result_generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 
 
-var JSON_HEADERS = {
+const JSON_HEADERS = {
     accept: "application/json",
     "content-type": "application/json",
 };
@@ -34523,98 +34409,64 @@ function scanAnalyticsCount(analytics, severity) {
             return analytics.vulnerabilities.criticalCount;
     }
 }
-function fetch(scanId, credentials, apiEndpointUrl, apiIdP) {
-    return scan_result_awaiter(this, void 0, void 0, function () {
-        var client, token, body;
-        return scan_result_generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    client = new lib_HttpClient();
-                    return [4, getAccessToken(client, credentials, apiIdP)];
-                case 1:
-                    token = _a.sent();
-                    return [4, getCICDScanQL(client, token, apiEndpointUrl, scanId)];
-                case 2:
-                    body = _a.sent();
-                    core_debug("Raw body: ".concat(body));
-                    return [2, parse(body)];
-            }
-        });
-    });
+async function fetch(scanId, credentials, apiEndpointUrl, apiIdP) {
+    const client = new lib_HttpClient();
+    const token = await getAccessToken(client, credentials, apiIdP);
+    const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId);
+    core_debug(`Raw body: ${body}`);
+    return parse(body);
 }
-function getAccessToken(client, credentials, apiIdP) {
-    return scan_result_awaiter(this, void 0, void 0, function () {
-        var clientId, clientSecret, apiHost, apiAudience, formPart, formBody, response, body;
-        return scan_result_generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    clientId = credentials.clientId, clientSecret = credentials.clientSecret;
-                    apiHost = "";
-                    apiAudience = "";
-                    switch (apiIdP.toLowerCase()) {
-                        case "auth0":
-                            apiHost = "auth.wiz.io";
-                            apiAudience = "beyond-api";
-                            break;
-                        case "cognito":
-                            apiHost = "auth.app.wiz.io";
-                            apiAudience = "wiz-api";
-                            break;
-                        default:
-                            throw new Error("Unexpected IdP ".concat(apiIdP, ", must be Auth0 or Cognito"));
-                    }
-                    formPart = function (k, v) {
-                        return "".concat(encodeURIComponent(k), "=").concat(encodeURIComponent(v));
-                    };
-                    formBody = [
-                        formPart("grant_type", "client_credentials"),
-                        formPart("client_id", clientId),
-                        formPart("client_secret", clientSecret),
-                        formPart("audience", apiAudience),
-                    ].join("&");
-                    return [4, client.post("https://".concat(apiHost, "/oauth/token"), formBody, { "content-type": "application/x-www-form-urlencoded" })];
-                case 1:
-                    response = _a.sent();
-                    return [4, response.readBody()];
-                case 2:
-                    body = _a.sent();
-                    return [2, JSON.parse(body).access_token];
-            }
-        });
-    });
+async function getAccessToken(client, credentials, apiIdP) {
+    const { clientId, clientSecret } = credentials;
+    let apiHost = "";
+    let apiAudience = "";
+    switch (apiIdP.toLowerCase()) {
+        case "auth0":
+            apiHost = "auth.wiz.io";
+            apiAudience = "beyond-api";
+            break;
+        case "cognito":
+            apiHost = "auth.app.wiz.io";
+            apiAudience = "wiz-api";
+            break;
+        default:
+            throw new Error(`Unexpected IdP ${apiIdP}, must be Auth0 or Cognito`);
+    }
+    const formPart = (k, v) => {
+        return `${encodeURIComponent(k)}=${encodeURIComponent(v)}`;
+    };
+    const formBody = [
+        formPart("grant_type", "client_credentials"),
+        formPart("client_id", clientId),
+        formPart("client_secret", clientSecret),
+        formPart("audience", apiAudience),
+    ].join("&");
+    const response = await client.post(`https://${apiHost}/oauth/token`, formBody, { "content-type": "application/x-www-form-urlencoded" });
+    const body = await response.readBody();
+    return JSON.parse(body).access_token;
 }
-function getCICDScanQL(client, accessToken, apiEndpointUrl, scanId) {
-    return scan_result_awaiter(this, void 0, void 0, function () {
-        var response;
-        return scan_result_generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4, client.post(apiEndpointUrl, JSON.stringify({ query: "query{cicdScan(id:\"".concat(scanId, "\"){resultJSON}}") }), __assign({ authorization: "bearer ".concat(accessToken) }, JSON_HEADERS))];
-                case 1:
-                    response = _a.sent();
-                    return [4, response.readBody()];
-                case 2: return [2, _a.sent()];
-            }
-        });
-    });
+async function getCICDScanQL(client, accessToken, apiEndpointUrl, scanId) {
+    const response = await client.post(apiEndpointUrl, JSON.stringify({ query: `query{cicdScan(id:"${scanId}"){resultJSON}}` }), { authorization: `bearer ${accessToken}`, ...JSON_HEADERS });
+    return await response.readBody();
 }
 function buildSummary(image, scanId, result) {
-    var matches = (result.failedPolicyMatches || []).map(function (pm) {
-        var _a = pm.policy, name = _a.name, _b = _a.params, ignoreUnfixed = _b.ignoreUnfixed, packageCountThreshold = _b.packageCountThreshold, severity = _b.severity;
-        var cveCount = scanAnalyticsCount(result.analytics, severity);
-        var withFixes = ignoreUnfixed ? " (with fixes)" : "";
-        return "<strong>".concat(name, "</strong>: This image contains ").concat(cveCount, " ").concat(severity, " vulnerabilities").concat(withFixes, ", which is greater than the policy threshold (").concat(packageCountThreshold, ")");
+    const matches = (result.failedPolicyMatches || []).map((pm) => {
+        const { name, params: { ignoreUnfixed, packageCountThreshold, severity }, } = pm.policy;
+        const cveCount = scanAnalyticsCount(result.analytics, severity);
+        const withFixes = ignoreUnfixed ? " (with fixes)" : "";
+        return `<strong>${name}</strong>: This image contains ${cveCount} ${severity} vulnerabilities${withFixes}, which is greater than the policy threshold (${packageCountThreshold})`;
     });
-    var title = matches.length === 0
-        ? "\u2705 ".concat(image, " passed all policies")
-        : "\u274C ".concat(image, " failed some policies");
-    var link = toScanUrl(scanId);
+    const title = matches.length === 0
+        ? `✅ ${image} passed all policies`
+        : `❌ ${image} failed some policies`;
+    const link = toScanUrl(scanId);
     return summary
         .addHeading(title)
         .addList(matches)
         .addLink("View report on Wiz", link);
 }
 function toScanUrl(scanId) {
-    return "https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'".concat(scanId, ")");
+    return `https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'${scanId})`;
 }
 function parse(body) {
     return JSON.parse(body).data.cicdScan.resultJSON;
@@ -34628,7 +34480,7 @@ function parseWizIdP(raw) {
         case "cognito":
             return "cognito";
         default:
-            throw new Error("Invalid Wiz IdP: ".concat(raw, ". Must be Auth0 or Cognito."));
+            throw new Error(`Invalid Wiz IdP: ${raw}. Must be Auth0 or Cognito.`);
     }
 }
 
@@ -34636,152 +34488,93 @@ function parseWizIdP(raw) {
 
 
 function getInputs() {
-    var wizClientId = getInput("wiz-client-id", { required: true });
-    var wizClientSecret = getInput("wiz-client-secret", {
+    const wizClientId = getInput("wiz-client-id", { required: true });
+    const wizClientSecret = getInput("wiz-client-secret", {
         required: true,
     });
-    var image = getInput("image", { required: true });
-    var wizApiEndpointUrl = getOptionalInput("wiz-api-endpoint-url");
-    var wizApiIdP = parseWizIdP(getInput("wiz-api-idp", { required: true }));
-    var customPolicies = getOptionalInput("custom-policies");
-    var pull = getBooleanInput("pull", { required: true });
-    var fail = getBooleanInput("fail", { required: true });
+    const image = getInput("image", { required: true });
+    const wizApiEndpointUrl = getOptionalInput("wiz-api-endpoint-url");
+    const wizApiIdP = parseWizIdP(getInput("wiz-api-idp", { required: true }));
+    const customPolicies = getOptionalInput("custom-policies");
+    const pull = getBooleanInput("pull", { required: true });
+    const fail = getBooleanInput("fail", { required: true });
     return {
-        wizClientId: wizClientId,
-        wizClientSecret: wizClientSecret,
-        wizApiEndpointUrl: wizApiEndpointUrl,
-        wizApiIdP: wizApiIdP,
-        image: image,
-        customPolicies: customPolicies,
-        pull: pull,
-        fail: fail,
+        wizClientId,
+        wizClientSecret,
+        wizApiEndpointUrl,
+        wizApiIdP,
+        image,
+        customPolicies,
+        pull,
+        fail,
     };
 }
 function getOptionalInput(name) {
-    var value = getInput(name, { required: false });
+    const value = getInput(name, { required: false });
     return value !== "" ? value : null;
 }
 
 ;// CONCATENATED MODULE: ./lib/main.js
-var main_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var main_generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
+
+
+
+
+
+async function run() {
+    try {
+        const { wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail, } = getInputs();
+        const wizCredentials = {
+            clientId: wizClientId,
+            clientSecret: wizClientSecret,
+        };
+        if (pull) {
+            await exec_exec("docker", ["pull", image]);
+        }
+        const wizcli = await getWizCLI(wizCredentials);
+        const { scanId, scanPassed } = await wizcli.scan(image, customPolicies);
+        if (scanId && wizApiEndpointUrl) {
+            try {
+                const result = await fetch(scanId, wizCredentials, wizApiEndpointUrl, wizApiIdP);
+                const summary = buildSummary(image, scanId, result);
+                await summary.write();
             }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+            catch (error) {
+                if (error instanceof Error) {
+                    warning(`Error writing summary: ${error.message}`);
+                }
+                else if (typeof error === "string") {
+                    warning(`Error writing summary: ${error}`);
+                }
+                else {
+                    warning("Error writing summary");
+                }
+            }
+        }
+        if (scanPassed) {
+            setOutput("scan-id", scanId);
+            setOutput("scan-url", scanId ? toScanUrl(scanId) : null);
+            setOutput("scan-result", "passed");
+        }
+        else {
+            setOutput("scan-id", scanId);
+            setOutput("scan-url", scanId ? toScanUrl(scanId) : null);
+            setOutput("scan-result", "failed");
+            if (fail) {
+                setFailed(`Image ${image} does not satisfy ${customPolicies ? "custom policies" : "default policies"}`);
+            }
+        }
     }
-};
-
-
-
-
-
-function run() {
-    return main_awaiter(this, void 0, void 0, function () {
-        var _a, wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail, wizCredentials, wizcli, _b, scanId, scanPassed, result, summary, error_1, error_2;
-        return main_generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    _c.trys.push([0, 10, , 11]);
-                    _a = getInputs(), wizClientId = _a.wizClientId, wizClientSecret = _a.wizClientSecret, wizApiEndpointUrl = _a.wizApiEndpointUrl, wizApiIdP = _a.wizApiIdP, image = _a.image, customPolicies = _a.customPolicies, pull = _a.pull, fail = _a.fail;
-                    wizCredentials = {
-                        clientId: wizClientId,
-                        clientSecret: wizClientSecret,
-                    };
-                    if (!pull) return [3, 2];
-                    return [4, exec_exec("docker", ["pull", image])];
-                case 1:
-                    _c.sent();
-                    _c.label = 2;
-                case 2: return [4, getWizCLI(wizCredentials)];
-                case 3:
-                    wizcli = _c.sent();
-                    return [4, wizcli.scan(image, customPolicies)];
-                case 4:
-                    _b = _c.sent(), scanId = _b.scanId, scanPassed = _b.scanPassed;
-                    if (!(scanId && wizApiEndpointUrl)) return [3, 9];
-                    _c.label = 5;
-                case 5:
-                    _c.trys.push([5, 8, , 9]);
-                    return [4, fetch(scanId, wizCredentials, wizApiEndpointUrl, wizApiIdP)];
-                case 6:
-                    result = _c.sent();
-                    summary = buildSummary(image, scanId, result);
-                    return [4, summary.write()];
-                case 7:
-                    _c.sent();
-                    return [3, 9];
-                case 8:
-                    error_1 = _c.sent();
-                    if (error_1 instanceof Error) {
-                        warning("Error writing summary: ".concat(error_1.message));
-                    }
-                    else if (typeof error_1 === "string") {
-                        warning("Error writing summary: ".concat(error_1));
-                    }
-                    else {
-                        warning("Error writing summary");
-                    }
-                    return [3, 9];
-                case 9:
-                    if (scanPassed) {
-                        setOutput("scan-id", scanId);
-                        setOutput("scan-url", scanId ? toScanUrl(scanId) : null);
-                        setOutput("scan-result", "passed");
-                    }
-                    else {
-                        setOutput("scan-id", scanId);
-                        setOutput("scan-url", scanId ? toScanUrl(scanId) : null);
-                        setOutput("scan-result", "failed");
-                        if (fail) {
-                            setFailed("Image ".concat(image, " does not satisfy ").concat(customPolicies ? "custom policies" : "default policies"));
-                        }
-                    }
-                    return [3, 11];
-                case 10:
-                    error_2 = _c.sent();
-                    if (error_2 instanceof Error) {
-                        setFailed(error_2.message);
-                    }
-                    else if (typeof error_2 === "string") {
-                        setFailed(error_2);
-                    }
-                    else {
-                        setFailed("Non-Error exception");
-                    }
-                    return [3, 11];
-                case 11: return [2];
-            }
-        });
-    });
+    catch (error) {
+        if (error instanceof Error) {
+            setFailed(error.message);
+        }
+        else if (typeof error === "string") {
+            setFailed(error);
+        }
+        else {
+            setFailed("Non-Error exception");
+        }
+    }
 }
 run();
 
