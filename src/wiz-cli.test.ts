@@ -31,7 +31,7 @@ describe("getWizInstallUrl", () => {
     Object.defineProperty(process, "platform", { value: "linux" });
     Object.defineProperty(process, "arch", { value: "x64" });
     expect(getWizInstallUrl()).toBe(
-      "https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64",
+      "https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64",
     );
   });
 
@@ -39,7 +39,7 @@ describe("getWizInstallUrl", () => {
     Object.defineProperty(process, "platform", { value: "linux" });
     Object.defineProperty(process, "arch", { value: "arm64" });
     expect(getWizInstallUrl()).toBe(
-      "https://downloads.wiz.io/wizcli/latest/wizcli-linux-arm64",
+      "https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-arm64",
     );
   });
 
@@ -47,7 +47,7 @@ describe("getWizInstallUrl", () => {
     Object.defineProperty(process, "platform", { value: "darwin" });
     Object.defineProperty(process, "arch", { value: "x64" });
     expect(getWizInstallUrl()).toBe(
-      "https://downloads.wiz.io/wizcli/latest/wizcli-darwin-amd64",
+      "https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-amd64",
     );
   });
 
@@ -55,7 +55,7 @@ describe("getWizInstallUrl", () => {
     Object.defineProperty(process, "platform", { value: "darwin" });
     Object.defineProperty(process, "arch", { value: "arm64" });
     expect(getWizInstallUrl()).toBe(
-      "https://downloads.wiz.io/wizcli/latest/wizcli-darwin-arm64",
+      "https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-arm64",
     );
   });
 
@@ -63,7 +63,7 @@ describe("getWizInstallUrl", () => {
     Object.defineProperty(process, "platform", { value: "win32" });
     Object.defineProperty(process, "arch", { value: "x64" });
     expect(getWizInstallUrl()).toBe(
-      "https://downloads.wiz.io/wizcli/latest/wizcli-windows-amd64.exe",
+      "https://downloads.wiz.io/v1/wizcli/latest/wizcli-windows-amd64.exe",
     );
   });
 
