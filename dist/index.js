@@ -34368,21 +34368,21 @@ function parseScanId(str) {
 function getWizInstallUrl() {
     switch (process.platform) {
         case "win32":
-            return "https://downloads.wiz.io/wizcli/latest/wizcli-windows-amd64.exe";
+            return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-windows-amd64.exe";
         case "darwin":
             switch (process.arch) {
                 case "x64":
-                    return "https://downloads.wiz.io/wizcli/latest/wizcli-darwin-amd64";
+                    return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-amd64";
                 case "arm64":
-                    return "https://downloads.wiz.io/wizcli/latest/wizcli-darwin-arm64";
+                    return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-arm64";
             }
             break;
         case "linux":
             switch (process.arch) {
                 case "x64":
-                    return "https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64";
+                    return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64";
                 case "arm64":
-                    return "https://downloads.wiz.io/wizcli/latest/wizcli-linux-arm64";
+                    return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-arm64";
             }
     }
     throw new Error(`Unsupported platform or architecture: ${process.platform}/${process.arch}`);
