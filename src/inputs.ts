@@ -1,11 +1,9 @@
 import * as core from "@actions/core";
 
-import type { WizIdP } from "./wiz-config.js"
-import { parseWizIdP } from "./wiz-config.js"
+import type { WizIdP } from "./wiz-config.js";
+import { parseWizIdP } from "./wiz-config.js";
 
 export type Inputs = {
-  wizClientId: string;
-  wizClientSecret: string;
   wizApiEndpointUrl: string | null;
   wizApiIdP: WizIdP;
   image: string;
@@ -15,10 +13,6 @@ export type Inputs = {
 };
 
 export function getInputs(): Inputs {
-  const wizClientId = core.getInput("wiz-client-id", { required: true });
-  const wizClientSecret = core.getInput("wiz-client-secret", {
-    required: true,
-  });
   const image = core.getInput("image", { required: true });
   const wizApiEndpointUrl = getOptionalInput("wiz-api-endpoint-url");
   const wizApiIdP = parseWizIdP(
@@ -29,8 +23,6 @@ export function getInputs(): Inputs {
   const fail = core.getBooleanInput("fail", { required: true });
 
   return {
-    wizClientId,
-    wizClientSecret,
     wizApiEndpointUrl,
     wizApiIdP,
     image,

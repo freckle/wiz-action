@@ -10,20 +10,14 @@ export type WizScanResult = {
 
 class WizCLI {
   wizcli: string;
-  credentials: WizCredentials;
 
-  constructor(wizcli: string, credentials: WizCredentials) {
+  constructor(wizcli: string) {
     this.wizcli = wizcli;
-    this.credentials = credentials;
   }
 
   async scan(image: string, policies: string | null): Promise<WizScanResult> {
-    const { clientId, clientSecret } = this.credentials;
-
     const args = ["docker", "scan", "--image", image]
       .concat(["--no-style"])
-      .concat(["--client-id", clientId])
-      .concat(["--client-secret", clientSecret])
       .concat(policies ? ["--policy", policies] : []);
 
     let scanId: string | null = null;
@@ -59,11 +53,11 @@ class WizCLI {
   }
 }
 
-export async function getWizCLI(credentials: WizCredentials): Promise<WizCLI> {
+export async function getWizCLI(): Promise<WizCLI> {
   const wizUrl = getWizInstallUrl();
   const wizcli = await tc.downloadTool(wizUrl);
   await exec.exec("chmod", ["+x", wizcli]);
-  return new WizCLI(wizcli, credentials);
+  return new WizCLI(wizcli);
 }
 
 // Example: "8221aac6-eae9-4867-bbb6-91fbd1092f45"

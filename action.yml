@@ -2,12 +2,6 @@ name: "Wiz"
 description: "Action to run Wiz CLI and format/report results"
 author: "Freckle"
 inputs:
-  wiz-client-id:
-    description: "Wiz Service Account Client Id"
-    required: true
-  wiz-client-secret:
-    description: "Wiz Service Account Client Secret"
-    required: true
   wiz-api-endpoint-url:
     description: "Wiz API Endpoint URL, such as https://api.us19.app.wiz.io/graphql"
     required: false
