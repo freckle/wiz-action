@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import type { HttpClient } from "@actions/http-client";
 import * as http from "@actions/http-client";
 
-import type { WizCredentials, WizIdP } from "./wiz-config.js"
+import type { WizCredentials, WizIdP } from "./wiz-config.js";
 
 const JSON_HEADERS = {
   accept: "application/json",
@@ -86,12 +86,11 @@ export type Severity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export async function fetch(
   scanId: string,
-  credentials: WizCredentials,
   apiEndpointUrl: string,
   apiIdP: WizIdP,
 ): Promise<ScanResult> {
   const client = new http.HttpClient();
-  const token = await getAccessToken(client, credentials, apiIdP);
+  const token = await getAccessToken(client, apiIdP);
   const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId);
   core.debug(`Raw body: ${body}`);
   return parse(body);
@@ -99,10 +98,18 @@ export async function fetch(
 
 async function getAccessToken(
   client: HttpClient,
-  credentials: WizCredentials,
   apiIdP: string,
 ): Promise<string> {
-  const { clientId, clientSecret } = credentials;
+  const clientId = process.env.WIZ_CLIENT_ID;
+  const clientSecret = process.env.WIZ_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    // This shouldn't be possible because the scan itself will fail of these
+    // variables are not present, and we would never get here.
+    throw new Error(
+      "To interact with the Wiz API, the WIZ_CLIENT_ID and WIZ_CLIENT_SECRET environment variables must be set.",
+    );
+  }
 
   let apiHost = "";
   let apiAudience = "";

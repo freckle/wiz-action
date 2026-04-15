@@ -11,9 +11,10 @@ with the Wiz CLI.
 - run: docker build --tag myimage .
 - uses: freckle/wiz-action@v2
   with:
-    wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
-    wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
     image: myimage
+  env:
+    WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+    WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
 ```
 
 ## Usage with Buildx Action
@@ -25,12 +26,13 @@ with the Wiz CLI.
     tags: ${{ steps.meta.outputs.tags }}
     load: true # required so we can scan it
 
-- uses: freckle/wiz-action@v2
+- uses: freckle/wiz-action@v3
   with:
-    wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
-    wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
     image: ${{ steps.build.outputs.imageid }}
     custom-policies: tvm_automation_policy
+  env:
+    WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+    WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
 ```
 
 ## Inputs and Outputs
@@ -39,8 +41,6 @@ with the Wiz CLI.
 
 **Required**:
 
-- `wiz-client-id`: Wiz [Service Account] Client Id
-- `wiz-client-secret`: Wiz [Service Account] Client Secret
 - `image`: The image to scan
 
 [service account]: https://docs.wiz.io/wiz-docs/docs/set-up-wiz-cli#generate-a-wiz-service-account-key
