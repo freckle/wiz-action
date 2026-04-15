@@ -34315,19 +34315,13 @@ class WizCLI {
         this.wizcli = wizcli;
         this.credentials = credentials;
     }
-    async auth() {
-        const { clientId, clientSecret } = this.credentials;
-        await exec_exec(this.wizcli, [
-            "auth",
-            "--id",
-            clientId,
-            "--secret",
-            clientSecret,
-        ]);
-        return this;
-    }
     async scan(image, policies) {
-        const args = ["docker", "scan", "--image", image, "--no-style"].concat(policies ? ["--policy", policies] : []);
+        const { clientId, clientSecret } = this.credentials;
+        const args = ["docker", "scan", "--image", image]
+            .concat(["--no-style"])
+            .concat(["--client-id", clientId])
+            .concat(["--client-secret", clientSecret])
+            .concat(policies ? ["--policy", policies] : []);
         let scanId = null;
         const listener = (data) => {
             if (!scanId) {
@@ -34358,7 +34352,7 @@ async function getWizCLI(credentials) {
     const wizUrl = getWizInstallUrl();
     const wizcli = await downloadTool(wizUrl);
     await exec_exec("chmod", ["+x", wizcli]);
-    return new WizCLI(wizcli, credentials).auth();
+    return new WizCLI(wizcli, credentials);
 }
 const SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 function parseScanId(str) {
@@ -34528,7 +34522,7 @@ async function run() {
             clientSecret: wizClientSecret,
         };
         if (pull) {
-            await exec_exec("docker", ["pull", image]);
+            await exec_exec("docker", ["pull", "--quiet", image]);
         }
         const wizcli = await getWizCLI(wizCredentials);
         const { scanId, scanPassed } = await wizcli.scan(image, customPolicies);
