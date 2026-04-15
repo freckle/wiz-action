@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as tc from "@actions/tool-cache";
-import type { WizCredentials } from "./wiz-config.js"
+import type { WizCredentials } from "./wiz-config.js";
 
 export type WizScanResult = {
   scanId: string | null;
@@ -17,24 +17,14 @@ class WizCLI {
     this.credentials = credentials;
   }
 
-  async auth(): Promise<WizCLI> {
+  async scan(image: string, policies: string | null): Promise<WizScanResult> {
     const { clientId, clientSecret } = this.credentials;
 
-    await exec.exec(this.wizcli, [
-      "auth",
-      "--id",
-      clientId,
-      "--secret",
-      clientSecret,
-    ]);
-
-    return this;
-  }
-
-  async scan(image: string, policies: string | null): Promise<WizScanResult> {
-    const args = ["docker", "scan", "--image", image, "--no-style"].concat(
-      policies ? ["--policy", policies] : [],
-    );
+    const args = ["docker", "scan", "--image", image]
+      .concat(["--no-style"])
+      .concat(["--client-id", clientId])
+      .concat(["--client-secret", clientSecret])
+      .concat(policies ? ["--policy", policies] : []);
 
     let scanId: string | null = null;
 
@@ -73,7 +63,7 @@ export async function getWizCLI(credentials: WizCredentials): Promise<WizCLI> {
   const wizUrl = getWizInstallUrl();
   const wizcli = await tc.downloadTool(wizUrl);
   await exec.exec("chmod", ["+x", wizcli]);
-  return new WizCLI(wizcli, credentials).auth();
+  return new WizCLI(wizcli, credentials);
 }
 
 // Example: "8221aac6-eae9-4867-bbb6-91fbd1092f45"
