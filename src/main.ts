@@ -7,37 +7,19 @@ import { getInputs } from "./inputs.js";
 
 async function run() {
   try {
-    const {
-      wizClientId,
-      wizClientSecret,
-      wizApiEndpointUrl,
-      wizApiIdP,
-      image,
-      customPolicies,
-      pull,
-      fail,
-    } = getInputs();
-
-    const wizCredentials = {
-      clientId: wizClientId,
-      clientSecret: wizClientSecret,
-    };
+    const { wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail } =
+      getInputs();
 
     if (pull) {
       await exec.exec("docker", ["pull", "--quiet", image]);
     }
 
-    const wizcli = await wc.getWizCLI(wizCredentials);
+    const wizcli = await wc.getWizCLI();
     const { scanId, scanPassed } = await wizcli.scan(image, customPolicies);
 
     if (scanId && wizApiEndpointUrl) {
       try {
-        const result = await sr.fetch(
-          scanId,
-          wizCredentials,
-          wizApiEndpointUrl,
-          wizApiIdP,
-        );
+        const result = await sr.fetch(scanId, wizApiEndpointUrl, wizApiIdP);
         const summary = sr.buildSummary(image, scanId, result);
         await summary.write();
       } catch (error) {

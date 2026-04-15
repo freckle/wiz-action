@@ -21,24 +21,26 @@ jobs:
       - name: Scan statsd/statsd:v0.9.0 with service account credentials
         uses: ./
         with:
-          wiz-client-id: ${{ secrets.WIZ_CLIENT_ID }}
-          wiz-client-secret: ${{ secrets.WIZ_CLIENT_SECRET }}
           wiz-api-endpoint-url: ${{ vars.WIZ_API_ENDPOINT_URL }}
           image: statsd/statsd:v0.9.0 # has many, many CVEs
           custom-policies: tvm_automation_policy
           fail: false
           pull: true
+        env:
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_CLIENT_SECRET }}
 
       - id: scan
         name: Scan statsd/statsd:v0.9.0 with deployment credentials
         uses: ./
         with:
-          wiz-client-id: ${{ secrets.WIZ_V1_CLIENT_ID }}
-          wiz-client-secret: ${{ secrets.WIZ_V1_CLIENT_SECRET }}
           wiz-api-endpoint-url: ${{ vars.WIZ_API_ENDPOINT_URL }}
           image: statsd/statsd:v0.9.0 # has many, many CVEs
           custom-policies: tvm_automation_policy
           fail: false
+        env:
+          WIZ_CLIENT_ID: ${{ secrets.WIZ_V1_CLIENT_ID }}
+          WIZ_CLIENT_SECRET: ${{ secrets.WIZ_V1_CLIENT_SECRET }}
 
       - name: Verify Scan Id
         run: |
