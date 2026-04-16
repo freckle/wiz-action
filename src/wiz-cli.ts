@@ -16,7 +16,7 @@ class WizCLI {
   }
 
   async scan(image: string, policies: string | null): Promise<WizScanResult> {
-    const args = ["docker", "scan", "--image", image]
+    const args = ["scan", "container-image", image]
       .concat(["--no-style"])
       .concat(policies ? ["--policy", policies] : []);
 
