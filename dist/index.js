@@ -34310,17 +34310,12 @@ function _unique(values) {
 
 class WizCLI {
     wizcli;
-    credentials;
-    constructor(wizcli, credentials) {
+    constructor(wizcli) {
         this.wizcli = wizcli;
-        this.credentials = credentials;
     }
     async scan(image, policies) {
-        const { clientId, clientSecret } = this.credentials;
-        const args = ["docker", "scan", "--image", image]
+        const args = ["scan", "container-image", image]
             .concat(["--no-style"])
-            .concat(["--client-id", clientId])
-            .concat(["--client-secret", clientSecret])
             .concat(policies ? ["--policy", policies] : []);
         let scanId = null;
         const listener = (data) => {
@@ -34348,11 +34343,11 @@ class WizCLI {
         };
     }
 }
-async function getWizCLI(credentials) {
+async function getWizCLI() {
     const wizUrl = getWizInstallUrl();
     const wizcli = await downloadTool(wizUrl);
     await exec_exec("chmod", ["+x", wizcli]);
-    return new WizCLI(wizcli, credentials);
+    return new WizCLI(wizcli);
 }
 const SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
 function parseScanId(str) {
@@ -34403,15 +34398,19 @@ function scanAnalyticsCount(analytics, severity) {
             return analytics.vulnerabilities.criticalCount;
     }
 }
-async function fetch(scanId, credentials, apiEndpointUrl, apiIdP) {
+async function fetch(scanId, apiEndpointUrl, apiIdP) {
     const client = new lib_HttpClient();
-    const token = await getAccessToken(client, credentials, apiIdP);
+    const token = await getAccessToken(client, apiIdP);
     const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId);
     core_debug(`Raw body: ${body}`);
     return parse(body);
 }
-async function getAccessToken(client, credentials, apiIdP) {
-    const { clientId, clientSecret } = credentials;
+async function getAccessToken(client, apiIdP) {
+    const clientId = process.env.WIZ_CLIENT_ID;
+    const clientSecret = process.env.WIZ_CLIENT_SECRET;
+    if (!clientId || !clientSecret) {
+        throw new Error("To interact with the Wiz API, the WIZ_CLIENT_ID and WIZ_CLIENT_SECRET environment variables must be set.");
+    }
     let apiHost = "";
     let apiAudience = "";
     switch (apiIdP.toLowerCase()) {
@@ -34482,10 +34481,6 @@ function parseWizIdP(raw) {
 
 
 function getInputs() {
-    const wizClientId = getInput("wiz-client-id", { required: true });
-    const wizClientSecret = getInput("wiz-client-secret", {
-        required: true,
-    });
     const image = getInput("image", { required: true });
     const wizApiEndpointUrl = getOptionalInput("wiz-api-endpoint-url");
     const wizApiIdP = parseWizIdP(getInput("wiz-api-idp", { required: true }));
@@ -34493,8 +34488,6 @@ function getInputs() {
     const pull = getBooleanInput("pull", { required: true });
     const fail = getBooleanInput("fail", { required: true });
     return {
-        wizClientId,
-        wizClientSecret,
         wizApiEndpointUrl,
         wizApiIdP,
         image,
@@ -34516,19 +34509,15 @@ function getOptionalInput(name) {
 
 async function run() {
     try {
-        const { wizClientId, wizClientSecret, wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail, } = getInputs();
-        const wizCredentials = {
-            clientId: wizClientId,
-            clientSecret: wizClientSecret,
-        };
+        const { wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail } = getInputs();
         if (pull) {
             await exec_exec("docker", ["pull", "--quiet", image]);
         }
-        const wizcli = await getWizCLI(wizCredentials);
+        const wizcli = await getWizCLI();
         const { scanId, scanPassed } = await wizcli.scan(image, customPolicies);
         if (scanId && wizApiEndpointUrl) {
             try {
-                const result = await fetch(scanId, wizCredentials, wizApiEndpointUrl, wizApiIdP);
+                const result = await fetch(scanId, wizApiEndpointUrl, wizApiIdP);
                 const summary = buildSummary(image, scanId, result);
                 await summary.write();
             }
