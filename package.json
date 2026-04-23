@@ -24,7 +24,7 @@
     "@actions/tool-cache": "^4.0.0"
   },
   "devDependencies": {
-    "@actions/glob": "^0.6.1",
+    "@actions/glob": "^0.7.0",
     "@octokit/plugin-rest-endpoint-methods": "^17.0.0",
     "@octokit/types": "^16.0.0",
     "@types/node": "^24.12.2",
