@@ -30,6 +30,17 @@ async function run() {
         } else {
           core.warning("Error writing summary");
         }
+
+        try {
+          const fallback = sr.buildFallbackSummary(image, scanId);
+          await fallback.write();
+        } catch (fallbackError) {
+          if (fallbackError instanceof Error) {
+            core.warning(
+              `Error writing fallback summary: ${fallbackError.message}`,
+            );
+          }
+        }
       }
     }
 

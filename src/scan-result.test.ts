@@ -48,3 +48,22 @@ test("Passed with osPackages", () => {
 `,
   );
 });
+
+test("parse returns null when cicdScan is null", () => {
+  const body = fs
+    .readFileSync("test/scan-results/cicd-scan-null.json")
+    .toString();
+  expect(scanResult.parse(body)).toBeNull();
+});
+
+test("buildFallbackSummary writes link without resultJSON", () => {
+  const summary = scanResult
+    .buildFallbackSummary("myapp:latest", "scan-id-123")
+    .stringify();
+
+  expect(summary).toBe(
+    `<h1>Wiz scan report for myapp:latest</h1>
+<a href="https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'scan-id-123)">View report on Wiz</a>
+`,
+  );
+});
