@@ -2,18 +2,21 @@ import * as core from "@actions/core";
 import type { HttpClient } from "@actions/http-client";
 import * as http from "@actions/http-client";
 
-import type { WizCredentials, WizIdP } from "./wiz-config.js";
+import type { WizIdP } from "./wiz-config.js";
 
 const JSON_HEADERS = {
   accept: "application/json",
   "content-type": "application/json",
 };
 
+const DEFAULT_FETCH_RETRIES = 5;
+const FETCH_RETRY_DELAY_MS = 2000;
+
 type CICDScanQL = {
   data: {
     cicdScan: {
       resultJSON: ScanResult;
-    };
+    } | null;
   };
 };
 
@@ -91,9 +94,27 @@ export async function fetch(
 ): Promise<ScanResult> {
   const client = new http.HttpClient();
   const token = await getAccessToken(client, apiIdP);
-  const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId);
-  core.debug(`Raw body: ${body}`);
-  return parse(body);
+
+  for (let attempt = 1; attempt <= DEFAULT_FETCH_RETRIES; attempt++) {
+    const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId);
+    core.debug(`Raw body (attempt ${attempt}): ${body}`);
+
+    const result = parse(body);
+    if (result) {
+      return result;
+    }
+
+    if (attempt < DEFAULT_FETCH_RETRIES) {
+      core.debug(
+        `cicdScan resultJSON not available yet, retrying in ${FETCH_RETRY_DELAY_MS}ms...`,
+      );
+      await sleep(FETCH_RETRY_DELAY_MS);
+    }
+  }
+
+  throw new Error(
+    "Wiz API returned no cicdScan resultJSON after scan completed. The scan report may not be available yet.",
+  );
 }
 
 async function getAccessToken(
@@ -161,6 +182,10 @@ async function getCICDScanQL(
   return await response.readBody();
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 // Work around lack of export
 type Summary = ReturnType<typeof core.summary.addRaw>;
 
@@ -193,11 +218,22 @@ export function buildSummary(
     .addLink("View report on Wiz", link);
 }
 
+export function buildFallbackSummary(image: string, scanId: string): Summary {
+  return core.summary
+    .addHeading(`Wiz scan report for ${image}`)
+    .addLink("View report on Wiz", toScanUrl(scanId));
+}
+
 export function toScanUrl(scanId: string): string {
   return `https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'${scanId})`;
 }
 
 // Exported for use in tests
-export function parse(body: string): ScanResult {
-  return (JSON.parse(body) as CICDScanQL).data.cicdScan.resultJSON;
+export function parse(body: string): ScanResult | null {
+  const parsed = JSON.parse(body) as CICDScanQL;
+  const cicdScan = parsed.data?.cicdScan;
+  if (!cicdScan?.resultJSON) {
+    return null;
+  }
+  return cicdScan.resultJSON;
 }
