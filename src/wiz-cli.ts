@@ -1,97 +1,94 @@
-import * as core from "@actions/core";
-import * as exec from "@actions/exec";
-import * as tc from "@actions/tool-cache";
-import type { WizCredentials } from "./wiz-config.js";
+import * as core from '@actions/core'
+import * as exec from '@actions/exec'
+import * as tc from '@actions/tool-cache'
 
-export type WizScanResult = {
-  scanId: string | null;
-  scanPassed: boolean;
-};
+type WizScanResult = {
+  scanId: string | null
+  scanPassed: boolean
+}
 
 class WizCLI {
-  wizcli: string;
+  wizcli: string
 
   constructor(wizcli: string) {
-    this.wizcli = wizcli;
+    this.wizcli = wizcli
   }
 
   async scan(image: string, policies: string | null): Promise<WizScanResult> {
-    const args = ["scan", "container-image", image]
-      .concat(["--no-style"])
-      .concat(policies ? ["--policy", policies] : []);
+    const args = ['scan', 'container-image', image]
+      .concat(['--no-style'])
+      .concat(policies ? ['--policy', policies] : [])
 
-    let scanId: string | null = null;
+    let scanId: string | null = null
 
     const listener = (data: Buffer) => {
       if (!scanId) {
-        scanId = parseScanId(data.toString());
+        scanId = parseScanId(data.toString())
       }
-    };
+    }
 
     const ec = await exec.exec(this.wizcli, args, {
       ignoreReturnCode: true,
       listeners: {
         stdout: listener,
-        stderr: listener,
-      },
-    });
+        stderr: listener
+      }
+    })
 
     if (ec !== 0 && ec !== 4) {
-      throw new Error(`wiz scan errored, status: ${ec}`);
+      throw new Error(`wiz scan errored, status: ${ec}`)
     }
 
     if (!scanId) {
-      core.warning("Unable to parse Scan Id from report");
+      core.warning('Unable to parse Scan Id from report')
     }
 
-    const scanPassed = ec === 0;
+    const scanPassed = ec === 0
 
     return {
       scanId,
-      scanPassed,
-    };
+      scanPassed
+    }
   }
 }
 
 export async function getWizCLI(): Promise<WizCLI> {
-  const wizUrl = getWizInstallUrl();
-  const wizcli = await tc.downloadTool(wizUrl);
-  await exec.exec("chmod", ["+x", wizcli]);
-  return new WizCLI(wizcli);
+  const wizUrl = getWizInstallUrl()
+  const wizcli = await tc.downloadTool(wizUrl)
+  await exec.exec('chmod', ['+x', wizcli])
+  return new WizCLI(wizcli)
 }
 
 // Example: "8221aac6-eae9-4867-bbb6-91fbd1092f45"
-const SCAN_ID_FORMAT = new RegExp("[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}");
+const SCAN_ID_FORMAT = new RegExp('[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}')
 
 // exported for testing
 export function parseScanId(str: string): string | null {
-  const match = str.match(SCAN_ID_FORMAT);
-  return match ? match[0] : null;
+  const match = str.match(SCAN_ID_FORMAT)
+  return match ? match[0] : null
 }
 
 // exported for testing
 export function getWizInstallUrl(): string {
   switch (process.platform) {
-    case "win32":
-      return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-windows-amd64.exe";
-    case "darwin":
+    case 'win32':
+      return 'https://downloads.wiz.io/v1/wizcli/latest/wizcli-windows-amd64.exe'
+    case 'darwin':
       switch (process.arch) {
-        case "x64":
-          return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-amd64";
-        case "arm64":
-          return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-arm64";
+        case 'x64':
+          return 'https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-amd64'
+        case 'arm64':
+          return 'https://downloads.wiz.io/v1/wizcli/latest/wizcli-darwin-arm64'
       }
-      break;
-    case "linux":
+      break
+    case 'linux':
       switch (process.arch) {
-        case "x64":
-          return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64";
-        case "arm64":
-          return "https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-arm64";
+        case 'x64':
+          return 'https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-amd64'
+        case 'arm64':
+          return 'https://downloads.wiz.io/v1/wizcli/latest/wizcli-linux-arm64'
       }
   }
 
-  throw new Error(
-    `Unsupported platform or architecture: ${process.platform}/${process.arch}`,
-  );
+  throw new Error(`Unsupported platform or architecture: ${process.platform}/${process.arch}`)
 }

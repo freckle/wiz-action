@@ -1,64 +1,63 @@
-import * as exec from "@actions/exec";
-import * as core from "@actions/core";
+import * as exec from '@actions/exec'
+import * as core from '@actions/core'
 
-import * as wc from "./wiz-cli.js";
-import * as sr from "./scan-result.js";
-import { getInputs } from "./inputs.js";
+import * as wc from './wiz-cli.js'
+import * as sr from './scan-result.js'
+import {getInputs} from './inputs.js'
 
 async function run() {
   try {
-    const { wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail } =
-      getInputs();
+    const {wizApiEndpointUrl, wizApiIdP, image, customPolicies, pull, fail} = getInputs()
 
     if (pull) {
-      await exec.exec("docker", ["pull", "--quiet", image]);
+      await exec.exec('docker', ['pull', '--quiet', image])
     }
 
-    const wizcli = await wc.getWizCLI();
-    const { scanId, scanPassed } = await wizcli.scan(image, customPolicies);
+    const wizcli = await wc.getWizCLI()
+    const {scanId, scanPassed} = await wizcli.scan(image, customPolicies)
 
     if (scanId && wizApiEndpointUrl) {
       try {
-        const result = await sr.fetch(scanId, wizApiEndpointUrl, wizApiIdP);
-        const summary = sr.buildSummary(image, scanId, result);
-        await summary.write();
+        const result = await sr.fetch(scanId, wizApiEndpointUrl, wizApiIdP)
+        const summary = sr.buildSummary(image, scanId, result)
+        await summary.write()
       } catch (error) {
         if (error instanceof Error) {
-          core.warning(`Error writing summary: ${error.message}`);
-        } else if (typeof error === "string") {
-          core.warning(`Error writing summary: ${error}`);
+          core.warning(`Error writing summary: ${error.message}`)
+        } else if (typeof error === 'string') {
+          core.warning(`Error writing summary: ${error}`)
         } else {
-          core.warning("Error writing summary");
+          core.warning('Error writing summary')
         }
       }
     }
 
     if (scanPassed) {
-      core.setOutput("scan-id", scanId);
-      core.setOutput("scan-url", scanId ? sr.toScanUrl(scanId) : null);
-      core.setOutput("scan-result", "passed");
+      core.setOutput('scan-id', scanId)
+      core.setOutput('scan-url', scanId ? sr.toScanUrl(scanId) : null)
+      core.setOutput('scan-result', 'passed')
     } else {
-      core.setOutput("scan-id", scanId);
-      core.setOutput("scan-url", scanId ? sr.toScanUrl(scanId) : null);
-      core.setOutput("scan-result", "failed");
+      core.setOutput('scan-id', scanId)
+      core.setOutput('scan-url', scanId ? sr.toScanUrl(scanId) : null)
+      core.setOutput('scan-result', 'failed')
 
       if (fail) {
         core.setFailed(
           `Image ${image} does not satisfy ${
-            customPolicies ? "custom policies" : "default policies"
-          }`,
-        );
+            customPolicies ? 'custom policies' : 'default policies'
+          }`
+        )
       }
     }
   } catch (error) {
     if (error instanceof Error) {
-      core.setFailed(error.message);
-    } else if (typeof error === "string") {
-      core.setFailed(error);
+      core.setFailed(error.message)
+    } else if (typeof error === 'string') {
+      core.setFailed(error)
     } else {
-      core.setFailed("Non-Error exception");
+      core.setFailed('Non-Error exception')
     }
   }
 }
 
-run();
+run()
