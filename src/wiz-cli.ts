@@ -7,6 +7,10 @@ type WizScanResult = {
   scanPassed: boolean
 }
 
+// WizCLI.scan and getWizCLI below are the I/O-heavy orchestration layer
+// (download a real binary, chmod it, exec it) covered by the `example.yaml` CI
+// job running the real action against a real Wiz scan, not by unit tests.
+/* v8 ignore start */
 class WizCLI {
   wizcli: string
 
@@ -58,6 +62,7 @@ export async function getWizCLI(): Promise<WizCLI> {
   await exec.exec('chmod', ['+x', wizcli])
   return new WizCLI(wizcli)
 }
+/* v8 ignore stop */
 
 // Example: "8221aac6-eae9-4867-bbb6-91fbd1092f45"
 const SCAN_ID_FORMAT = new RegExp('[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}')
