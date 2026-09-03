@@ -7,10 +7,6 @@ type WizScanResult = {
   scanPassed: boolean
 }
 
-// WizCLI.scan and getWizCLI below are the I/O-heavy orchestration layer
-// (download a real binary, chmod it, exec it) covered by the `example.yaml` CI
-// job running the real action against a real Wiz scan, not by unit tests.
-/* v8 ignore start */
 class WizCLI {
   wizcli: string
 
@@ -56,6 +52,10 @@ class WizCLI {
   }
 }
 
+// Downloading and chmod'ing a real binary is verified by the `example.yaml` CI
+// job, which runs the real action against a real Wiz scan. Unit-testing it
+// means asserting that two mocks were called, so it isn't counted here.
+/* v8 ignore start */
 export async function getWizCLI(): Promise<WizCLI> {
   const wizUrl = getWizInstallUrl()
   const wizcli = await tc.downloadTool(wizUrl)
