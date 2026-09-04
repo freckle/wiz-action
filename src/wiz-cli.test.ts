@@ -10,7 +10,7 @@ vi.mock('@actions/tool-cache')
 
 const SCAN_ID = '8221aac6-eae9-4867-bbb6-91fbd1092f45'
 
-describe('parseScanId', () => {
+describe(parseScanId.name, () => {
   it('parses un-encoded scan-id URLs', () => {
     const scanId = parseScanId(
       "https://app.wiz.io/findings/cicd-scans#~(cicd_scan~'8221aac6-eae9-4867-bbb6-91fbd1092f45)"
@@ -28,7 +28,7 @@ describe('parseScanId', () => {
   })
 })
 
-describe('getWizInstallUrl', () => {
+describe(getWizInstallUrl.name, () => {
   const originalPlatform = process.platform
   const originalArch = process.arch
 

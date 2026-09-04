@@ -1,6 +1,6 @@
 import {parseWizIdP} from './wiz-config.js'
 
-describe('parseWizIdP', () => {
+describe(parseWizIdP.name, () => {
   it('parses auth0', () => {
     expect(parseWizIdP('auth0')).toBe('auth0')
   })

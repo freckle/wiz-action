@@ -9,7 +9,7 @@ function mockActionInputs(inputs: Record<string, string>) {
   vi.mocked(core.getBooleanInput).mockImplementation(name => inputs[name] === 'true')
 }
 
-describe('getInputs', () => {
+describe(getInputs.name, () => {
   it('reads every input', () => {
     mockActionInputs({
       'wiz-api-endpoint-url': 'https://api.us19.app.wiz.io/graphql',
