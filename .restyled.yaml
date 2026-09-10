@@ -1,13 +1,3 @@
-restylers:
-  - clang-format:
-      enabled: false
-  - prettier:
-      include:
-        - "src/**/*.ts"
-  - prettier-json:
-      enabled: false # use jq
-  - whitespace:
-      include:
-        - "**/*"
-        - "!dist/index.js"
-  - "*"
+# dist/ is a generated bundle
+also_exclude:
+  - "dist/**/*"
