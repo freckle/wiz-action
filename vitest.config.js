@@ -14,10 +14,10 @@ export default defineConfig({
       exclude: ["src/main.ts"],
       // Remove to stop enforcing coverage (also revert ci.yml's pnpm coverage -> pnpm test)
       thresholds: {
-        lines: 29,
-        branches: 33,
-        functions: 38,
-        statements: 29,
+        lines: 98,
+        branches: 97,
+        functions: 100,
+        statements: 98,
       },
     },
   },
