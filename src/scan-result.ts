@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import type { HttpClient } from "@actions/http-client";
 import * as http from "@actions/http-client";
 
-import type { WizCredentials, WizIdP } from "./wiz-config.js";
+import type { WizIdP } from "./wiz-config.js";
 
 const JSON_HEADERS = {
   accept: "application/json",
@@ -27,7 +27,7 @@ export type ScanResult = {
   secrets: ScanResultItem[] | null;
 };
 
-export type ScanAnalytics = {
+type ScanAnalytics = {
   vulnerabilities: {
     criticalCount: number;
     highCount: number;
@@ -56,7 +56,7 @@ function scanAnalyticsCount(
   }
 }
 
-export type PolicyMatch = {
+type PolicyMatch = {
   policy: {
     name: string;
     description: string;
@@ -64,25 +64,25 @@ export type PolicyMatch = {
   };
 };
 
-export type PolicyParams = {
+type PolicyParams = {
   ignoreUnfixed: boolean;
   packageAllowList: string[];
   packageCountThreshold: number;
   severity: Severity;
 };
 
-export type ScanResultItem = {
+type ScanResultItem = {
   name: string;
   version: string;
   vulnerabilities: Vulnerability[];
 };
 
-export type Vulnerability = {
+type Vulnerability = {
   name: string;
   severity: Severity;
 };
 
-export type Severity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+type Severity = "INFO" | "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 export async function fetch(
   scanId: string,
@@ -111,8 +111,8 @@ async function getAccessToken(
     );
   }
 
-  let apiHost = "";
-  let apiAudience = "";
+  let apiHost: string;
+  let apiAudience: string;
 
   switch (apiIdP.toLowerCase()) {
     case "auth0":

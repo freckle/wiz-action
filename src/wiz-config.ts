@@ -1,8 +1,3 @@
-export type WizCredentials = {
-  clientId: string;
-  clientSecret: string;
-};
-
 export type WizIdP = "auth0" | "cognito";
 
 export function parseWizIdP(raw: string): WizIdP {
