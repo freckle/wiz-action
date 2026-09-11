@@ -1,9 +1,8 @@
 import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as tc from "@actions/tool-cache";
-import type { WizCredentials } from "./wiz-config.js";
 
-export type WizScanResult = {
+type WizScanResult = {
   scanId: string | null;
   scanPassed: boolean;
 };
