@@ -34,7 +34,7 @@ jobs:
           app-id: ${{ vars.FRECKLE_AUTOMATION_APP_ID }}
           private-key: ${{ secrets.FRECKLE_AUTOMATION_PRIVATE_KEY }}
 
-      - uses: cycjimmy/semantic-release-action@v6.0.0
+      - uses: cycjimmy/semantic-release-action@v6
         # conventional-changelog-conventionalcommits is held at 9.x: v10 needs
         # conventional-changelog-writer@9, which semantic-release@25 does not ship.
         with:
