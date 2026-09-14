@@ -14,7 +14,7 @@ fi
 
 if (("${UPDATE_DIST:-1}")); then
   echo "Building to ensure up-to-date dist (use UPDATE_DIST=0 to skip)"
-  yarn build
+  pnpm build
 fi
 
 exec act pull_request \
