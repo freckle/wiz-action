@@ -9,11 +9,14 @@ const JSON_HEADERS = {
   'content-type': 'application/json'
 }
 
+const MAX_FETCH_ATTEMPTS = 5
+const FETCH_RETRY_DELAY_MS = 2000
+
 type CICDScanQL = {
   data: {
     cicdScan: {
       resultJSON: ScanResult
-    }
+    } | null
   }
 }
 
@@ -85,12 +88,29 @@ export async function fetch(
   scanId: string,
   apiEndpointUrl: string,
   apiIdP: WizIdP
-): Promise<ScanResult> {
+): Promise<ScanResult | null> {
   const client = new http.HttpClient()
   const token = await getAccessToken(client, apiIdP)
-  const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId)
-  core.debug(`Raw body: ${body}`)
-  return parse(body)
+
+  for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt++) {
+    const body = await getCICDScanQL(client, token, apiEndpointUrl, scanId)
+    core.debug(`Raw body (attempt ${attempt}): ${body}`)
+
+    const result = parse(body)
+    if (result) {
+      return result
+    }
+
+    if (attempt < MAX_FETCH_ATTEMPTS) {
+      core.debug(`cicdScan resultJSON not available yet, retrying in ${FETCH_RETRY_DELAY_MS}ms...`)
+      await new Promise(resolve => setTimeout(resolve, FETCH_RETRY_DELAY_MS))
+    }
+  }
+
+  core.warning(
+    'Wiz API returned no cicdScan resultJSON after scan completed. The scan report may not be available yet.'
+  )
+  return null
 }
 
 async function getAccessToken(client: HttpClient, apiIdP: string): Promise<string> {
@@ -156,7 +176,15 @@ async function getCICDScanQL(
 // Work around lack of export
 type Summary = ReturnType<typeof core.summary.addRaw>
 
-export function buildSummary(image: string, scanId: string, result: ScanResult): Summary {
+export function buildSummary(image: string, scanId: string, result: ScanResult | null): Summary {
+  const link = toScanUrl(scanId)
+
+  if (!result) {
+    return core.summary
+      .addHeading(`Wiz scan report for ${image}`)
+      .addLink('View report on Wiz', link)
+  }
+
   const matches: string[] = (result.failedPolicyMatches || []).map(pm => {
     const {
       name,
@@ -171,8 +199,6 @@ export function buildSummary(image: string, scanId: string, result: ScanResult):
   const title =
     matches.length === 0 ? `✅ ${image} passed all policies` : `❌ ${image} failed some policies`
 
-  const link = toScanUrl(scanId)
-
   return core.summary.addHeading(title).addList(matches).addLink('View report on Wiz', link)
 }
 
@@ -181,6 +207,6 @@ export function toScanUrl(scanId: string): string {
 }
 
 // Exported for use in tests
-export function parse(body: string): ScanResult {
-  return (JSON.parse(body) as CICDScanQL).data.cicdScan.resultJSON
+export function parse(body: string): ScanResult | null {
+  return (JSON.parse(body) as CICDScanQL).data?.cicdScan?.resultJSON ?? null
 }
