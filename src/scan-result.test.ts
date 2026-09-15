@@ -10,9 +10,10 @@ test('Failed with cpes and osPackages', () => {
   const body = fs.readFileSync('test/scan-results/statsd.json').toString()
   const result = scanResult.parse(body)
 
-  expect(result.analytics.vulnerabilities.criticalCount).toBe(193)
-  expect(result.cpes?.length).toBe(1)
-  expect(result.osPackages?.length).toBe(215)
+  expect(result).not.toBeNull()
+  expect(result?.analytics.vulnerabilities.criticalCount).toBe(193)
+  expect(result?.cpes?.length).toBe(1)
+  expect(result?.osPackages?.length).toBe(215)
 
   const summary = scanResult.buildSummary('statsd/statsd', 'abc123', result).stringify()
 
@@ -28,9 +29,10 @@ test('Passed with osPackages', () => {
   const body = fs.readFileSync('test/scan-results/statsd-passed.json').toString()
   const result = scanResult.parse(body)
 
-  expect(result.analytics.vulnerabilities.criticalCount).toBe(1)
-  expect(result.cpes).toBeNull()
-  expect(result.osPackages?.length).toBe(164)
+  expect(result).not.toBeNull()
+  expect(result?.analytics.vulnerabilities.criticalCount).toBe(1)
+  expect(result?.cpes).toBeNull()
+  expect(result?.osPackages?.length).toBe(164)
 
   const summary = scanResult.buildSummary('statsd/statsd', 'abc123', result).stringify()
 
@@ -39,6 +41,21 @@ test('Passed with osPackages', () => {
     `<h1>✅ statsd/statsd passed all policies</h1>
 <ul>
 <a href="https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'abc123)">View report on Wiz</a>
+`
+  )
+})
+
+test('parse returns null when cicdScan is null', () => {
+  const body = fs.readFileSync('test/scan-results/cicd-scan-null.json').toString()
+  expect(scanResult.parse(body)).toBeNull()
+})
+
+test('buildSummary writes a fallback link when result is null', () => {
+  const summary = scanResult.buildSummary('myapp:latest', 'scan-id-123', null).stringify()
+
+  expect(summary).toBe(
+    `<h1>Wiz scan report for myapp:latest</h1>
+<a href="https://app.wiz.io/reports/cicd-scans#~(cicd_scan~'scan-id-123)">View report on Wiz</a>
 `
   )
 })
